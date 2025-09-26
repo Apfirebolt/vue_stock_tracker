@@ -20,13 +20,13 @@ h2 {
 }
 
 @theme {
-  --color-primary: #5409DA;
-  --color-secondary: #B6B09F;
-  --color-tertiary: #4E71FF;
-  --color-light: #F2F2F2;
-  --color-dark: #1D1616;
-  --color-danger: #E82561;
-  --color-success: #5B913B;
-  --color-info: #BBFBFF;
-  --color-accent-dark: #F9B3D1;
+  --color-primary: #1A73E8;
+  --color-secondary: #800e13;
+  --color-tertiary: #43A047;
+  --color-light: #FAFAFA;
+  --color-dark: #212121;
+  --color-danger: #D32F2F;
+  --color-success: #388E3C;
+  --color-info: #1976D2;
+  --color-accent-dark: #8E24AA;
 }

@@ -195,9 +195,8 @@ async function fetchQuote() {
   error.value = null;
   try {
     const response = await axiosInstance.get(
-      `/stock/quote?symbol=${search.value}`
+      `/quote?symbol=${search.value}`
     );
-    console.log('Response ', response);
     stockQuote.value = response.data;
   } catch (err) {
     error.value = "Failed to fetch quote";
@@ -226,7 +225,10 @@ async function fetchRecommendations() {
 function refresh() {
   fetchData();
   fetchNews();
-  fetchQuote();
+  // execute fetchQuote after 1 second to avoid rate limit issues
+  setTimeout(() => {
+    fetchQuote();
+  }, 1000);
   fetchRecommendations();
 }
 

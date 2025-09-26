@@ -8,8 +8,6 @@
           </div>
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4">
-              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-
               <router-link
                 v-for="link in links"
                 :key="link.name"
@@ -58,6 +56,8 @@ import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 const isScrolledDown = ref(false);
 const links = [
   { name: 'Home', href: '/' },
+  { name: 'Login', href: '/login' },
+  { name: 'Register', href: '/register' },
   { name: 'About', href: '/about' },
   { name: 'Symbol', href: '/symbol' },
   { name: 'Country', href: '/country' },
