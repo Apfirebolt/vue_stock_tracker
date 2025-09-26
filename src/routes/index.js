@@ -29,6 +29,11 @@ const routes = [
         component: () => import('../screens/Symbol.vue')
     },
     {
+        path: '/symbols/:symbol',
+        name: 'StockDetail',
+        component: () => import('../screens/StockDetail.vue')
+    },
+    {
         path: '/country',
         name: 'Country',
         component: () => import('../screens/Country.vue')
