@@ -1,6 +1,6 @@
 <template>
-    <div class="min-h-screen bg-info mt-24">
-        <div class="bg-white shadow-lg rounded-lg p-8">
+    <div class="min-h-screen bg-info">
+        <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
             <h1 class="text-4xl font-bold text-primary mb-4">
                 Symbol Page
             </h1>
@@ -52,7 +52,7 @@
 import { ref, onMounted } from 'vue';
 import axiosInstance from '../plugins/interceptor';
 
-const search = ref('');
+const search = ref('Goog');
 const loading = ref(false);
 const error = ref(null);
 const stockData = ref(null);

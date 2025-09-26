@@ -60,6 +60,7 @@ const links = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
   { name: 'Symbol', href: '/symbol' },
+  { name: 'Country', href: '/country' },
 ];
 
 const checkScroll = () => {
