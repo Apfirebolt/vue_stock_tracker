@@ -1,0 +1,88 @@
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import { httpClient } from "../plugins/interceptor";
+import { useAuth } from "./auth";
+import { toast } from 'vue3-toastify';
+
+const auth = useAuth();
+
+export const useAccount = defineStore("account", {
+  state: () => ({
+    account: ref({}),
+    accounts: ref([]),
+    loading: ref(false),
+  }),
+
+  getters: {
+    getAccount() {
+      return this.account;
+    },
+    getAccounts() {
+      return this.accounts;
+    },
+    isLoading() {
+      return this.loading;
+    },
+  },
+
+  actions: {
+    async addAccount(accountData) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.post("account", accountData, {
+          headers,
+        });
+        toast.success("Account added!");
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    async getAccountAction(accountId) {
+      try {
+        const response = await httpClient.get("account/" + accountId);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getAccountsAction(page = 1) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.get("account?page=" + page, {
+          headers,
+        });
+        this.accounts = response.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    async deleteAccount(accountId) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.delete("account/" + accountId, {
+          headers,
+        });
+        toast.success("Account deleted!");
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    resetAccountData() {
+      this.account = {};
+      this.accounts = [];
+    },
+  },
+});

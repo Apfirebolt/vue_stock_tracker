@@ -122,8 +122,6 @@ export const useAuth = defineStore("auth", {
       this.authData = null;
       toast.success("Logged out successfully!", toastOptions);
       Cookie.remove("user");
-      // redirect to login page
-      window.location.href = "/login";
     },
 
     resetSuccess() {

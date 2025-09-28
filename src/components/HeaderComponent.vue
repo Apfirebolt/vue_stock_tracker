@@ -123,6 +123,8 @@ const authLinks = [
   { name: "Dashboard", href: "/dashboard" },
   { name: "Profile", href: "/profile" },
   { name: "Settings", href: "/settings" },
+  { name: "Symbol", href: "/symbol" },
+  { name: "Country", href: "/country" },
   { name: "Logout", href: "#", action: logOutUtil },
 ];
 
