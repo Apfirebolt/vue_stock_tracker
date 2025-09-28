@@ -1,6 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Cookie from "js-cookie";
 import Home from '../screens/Home.vue'
 import NotFound from '../screens/404.vue'
+
+const authGuard = (to, from, next) => {
+    const isAuthenticated = Cookie.get('user')
+    if (to.name !== 'Login' && to.name !== 'Register' && !isAuthenticated) {
+        next({ name: 'Login' })
+    } else {
+        next()
+    }
+}
 
 const routes = [
     {
@@ -22,6 +32,12 @@ const routes = [
         path: '/about',
         name: 'About',
         component: () => import('../screens/About.vue')
+    },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('../screens/Dashboard.vue'),
+        beforeEnter: authGuard
     },
     {
         path: '/symbol',

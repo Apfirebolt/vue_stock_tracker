@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import Cookie from "js-cookie";
-import { backendClient, setupInterceptors } from "../plugins/interceptor";
+import { httpClient } from "../plugins/interceptor";
 import { toast } from 'vue3-toastify';
 import { toastOptions } from "../utils";
 
@@ -26,7 +26,7 @@ export const useAuth = defineStore("auth", {
   actions: {
     async loginAction(loginData) {
       try {
-        const response = await backendClient.post("login", loginData);
+        const response = await httpClient.post("auth/login", loginData);
         if (response.data) {
           this.authData = response.data;
           // Show success toast
@@ -49,7 +49,7 @@ export const useAuth = defineStore("auth", {
 
     async registerAction(registerData) {
       try {
-        const response = await backendClient.post("register", registerData);
+        const response = await httpClient.post("auth/register", registerData);
         if (response.data && response.status === 201) {
           this.authData = response.data;
           this.success = true;
@@ -75,7 +75,7 @@ export const useAuth = defineStore("auth", {
         const headers = {
           Authorization: `Bearer ${JSON.parse(authData).access}`,
         };
-        const response = await backendClient.get("profile", { headers });
+        const response = await httpClient.get("profile", { headers });
         this.profileData = response.data;
         return response.data;
       } catch (error) {
@@ -98,7 +98,7 @@ export const useAuth = defineStore("auth", {
         const headers = {
           Authorization: `Bearer ${JSON.parse(authData).access}`,
         };
-        const response = await backendClient.put("profile", profileData, { headers });
+        const response = await httpClient.put("profile", profileData, { headers });
         if (response.status === 200) {
           this.profileData = response.data;
           this.success = true;
@@ -122,6 +122,8 @@ export const useAuth = defineStore("auth", {
       this.authData = null;
       toast.success("Logged out successfully!", toastOptions);
       Cookie.remove("user");
+      // redirect to login page
+      window.location.href = "/login";
     },
 
     resetSuccess() {
@@ -133,8 +135,3 @@ export const useAuth = defineStore("auth", {
     },
   },
 });
-
-export const setupAuthInterceptors = () => {
-  const authStore = useAuth();
-  setupInterceptors(authStore.logout);
-};

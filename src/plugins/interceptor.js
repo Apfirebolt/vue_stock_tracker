@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+let baseURL = 'http://localhost:5000/api/';
+
 axios.interceptors.request.use(
     (config) => {
         return config;
@@ -22,6 +24,7 @@ axios.interceptors.response.use(
     }
 );
 
+
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     headers: {
@@ -33,4 +36,7 @@ const axiosInstance = axios.create({
     }
 });
 
-export default axiosInstance;
+const httpClient = axios.create({ baseURL });
+
+export { axiosInstance, httpClient };
+

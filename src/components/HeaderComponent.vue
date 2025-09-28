@@ -1,5 +1,14 @@
 <template>
-  <Disclosure :class="['border-b-4 lg:py-2 fixed top-0 z-20 w-full transition-all duration-300', isScrolledDown ? 'bg-dark dark:bg-slate-800' : 'bg-secondary dark:bg-slate-700 dark:text-white']" as="nav" v-slot="{ open }">
+  <Disclosure
+    :class="[
+      'border-b-4 lg:py-2 fixed top-0 z-20 w-full transition-all duration-300',
+      isScrolledDown
+        ? 'bg-dark dark:bg-slate-800'
+        : 'bg-secondary dark:bg-slate-700 dark:text-white',
+    ]"
+    as="nav"
+    v-slot="{ open }"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center h-16">
         <div class="flex items-center w-full justify-between">
@@ -8,14 +17,34 @@
           </div>
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4">
-              <router-link
-                v-for="link in links"
-                :key="link.name"
-                :to="link.href"
-                class="text-white hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 rounded-md font-medium"
-              >
-                {{ link.name }}
-              </router-link>
+              <template v-if="authData">
+                <template v-for="link in authLinks" :key="link.name">
+                  <button
+                    v-if="link.action"
+                    @click="link.action"
+                    class="text-white hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 rounded-md font-medium"
+                  >
+                    {{ link.name }}
+                  </button>
+                  <router-link
+                    v-else
+                    :to="link.href"
+                    class="text-white hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 rounded-md font-medium"
+                  >
+                    {{ link.name }}
+                  </router-link>
+                </template>
+              </template>
+              <template v-else>
+                <router-link
+                  v-for="link in links"
+                  :key="link.name"
+                  :to="link.href"
+                  class="text-white hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 rounded-md font-medium"
+                >
+                  {{ link.name }}
+                </router-link>
+              </template>
             </div>
           </div>
         </div>
@@ -49,19 +78,24 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useAuth } from "../stores/auth";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 
 const isScrolledDown = ref(false);
-const links = [
-  { name: 'Home', href: '/' },
-  { name: 'Login', href: '/login' },
-  { name: 'Register', href: '/register' },
-  { name: 'About', href: '/about' },
-  { name: 'Symbol', href: '/symbol' },
-  { name: 'Country', href: '/country' },
-];
+const auth = useAuth(); 
+const router = useRouter();
+
+const authData = computed(() => auth.getAuthData);
+
+// if authData changes from some value to null, redirect to login page
+watch(authData, (newVal, oldVal) => {
+  if (oldVal && !newVal) {
+    router.push("/login");
+  }
+});
 
 const checkScroll = () => {
   if (window.scrollY > 100) {
@@ -71,11 +105,26 @@ const checkScroll = () => {
   }
 };
 
-window.addEventListener('scroll', checkScroll);
+window.addEventListener("scroll", checkScroll);
 
-onMounted(() => {
-  checkScroll();
-});
+const logOutUtil = () => {
+  auth.logout();
+};
+const links = [
+  { name: "Home", href: "/" },
+  { name: "Login", href: "/login" },
+  { name: "Register", href: "/register" },
+  { name: "About", href: "/about" },
+  { name: "Symbol", href: "/symbol" },
+  { name: "Country", href: "/country" },
+];
+
+const authLinks = [
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Profile", href: "/profile" },
+  { name: "Settings", href: "/settings" },
+  { name: "Logout", href: "#", action: logOutUtil },
+];
 
 onMounted(() => {
   checkScroll();

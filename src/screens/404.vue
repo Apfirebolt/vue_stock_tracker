@@ -5,7 +5,7 @@
         <p class="text-gray-600 mt-2">Sorry, the page you are looking for does not exist.</p>
         <router-link
             to="/"
-            class="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+            class="mt-6 px-6 py-3 bg-primary text-white rounded-lg shadow hover:bg-blue-600 transition"
         >
             Go Back Home
         </router-link>

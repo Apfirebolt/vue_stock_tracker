@@ -142,7 +142,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import axiosInstance from "../plugins/interceptor";
+import { axiosInstance } from "../plugins/interceptor";
 
 const route = useRoute();
 const loading = ref(false);

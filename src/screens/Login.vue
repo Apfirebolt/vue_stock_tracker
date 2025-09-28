@@ -42,7 +42,7 @@
         </div>
         <button
           type="submit"
-          class="w-full bg-blue-500 text-white py-2 rounded font-semibold hover:bg-blue-600 transition flex items-center justify-center gap-2"
+          class="w-full bg-secondary text-white py-2 rounded font-semibold hover:bg-blue-600 transition flex items-center justify-center gap-2"
           :disabled="loading"
         >
           <font-awesome-icon :icon="['fas', 'sign-in-alt']" v-if="!loading" />
@@ -64,8 +64,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import axiosInstance from "../plugins/interceptor";
+import { ref, computed } from "vue";
+import { httpClient } from "../plugins/interceptor";
+import { useAuth } from "../stores/auth";
 
 // FontAwesome imports
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -74,6 +75,7 @@ import { faEnvelope, faLock, faSignInAlt, faSpinner } from '@fortawesome/free-so
 
 library.add(faEnvelope, faLock, faSignInAlt, faSpinner);
 
+const auth = useAuth();
 const email = ref("");
 const password = ref("");
 const loading = ref(false);
@@ -83,12 +85,7 @@ async function handleLogin() {
   loading.value = true;
   error.value = null;
   try {
-    const response = await axiosInstance.post("/login", {
-      email: email.value,
-      password: password.value,
-    });
-    // Handle successful login (e.g., save token, redirect)
-    // Example: localStorage.setItem('token', response.data.token);
+    await auth.loginAction({ email: email.value, password: password.value })
   } catch (err) {
     error.value = "Invalid email or password";
     console.error(err);

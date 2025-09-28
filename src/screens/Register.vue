@@ -9,16 +9,33 @@
       </h1>
       <form @submit.prevent="handleRegister" class="space-y-4">
         <div>
-          <label class="block text-gray-700 mb-1" for="username"
-            >Username</label
+          <label class="block text-gray-700 mb-1" for="firstName"
+            >First Name</label
           >
           <div class="relative">
             <span class="absolute left-3 top-2.5 text-gray-400">
               <font-awesome-icon :icon="['fas', 'user']" />
             </span>
             <input
-              id="username"
-              v-model="username"
+              id="firstName"
+              v-model="firstName"
+              type="text"
+              class="w-full pl-10 px-3 py-2 border rounded focus:outline-none focus:ring"
+              required
+            />
+          </div>
+        </div>
+        <div>
+          <label class="block text-gray-700 mb-1" for="lastName"
+            >Last Name</label
+          >
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 text-gray-400">
+              <font-awesome-icon :icon="['fas', 'user']" />
+            </span>
+            <input
+              id="lastName"
+              v-model="lastName"
               type="text"
               class="w-full pl-10 px-3 py-2 border rounded focus:outline-none focus:ring"
               required
@@ -59,7 +76,7 @@
         </div>
         <button
           type="submit"
-          class="w-full bg-blue-500 text-white py-2 rounded font-semibold hover:bg-blue-600 transition flex items-center justify-center gap-2"
+          class="w-full bg-secondary text-white py-2 rounded font-semibold hover:bg-blue-600 transition flex items-center justify-center gap-2"
           :disabled="loading"
         >
           <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" v-if="!loading" />
@@ -82,7 +99,9 @@
 
 <script setup>
 import { ref } from "vue";
-import axiosInstance from "../plugins/interceptor";
+import { httpClient } from "../plugins/interceptor";
+import { computed } from "vue";
+import { useAuth } from "../stores/auth";
 
 // FontAwesome imports
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -91,7 +110,10 @@ import { faUser, faEnvelope, faLock, faUserPlus, faArrowRightToBracket, faSpinne
 
 library.add(faUser, faEnvelope, faLock, faUserPlus, faArrowRightToBracket, faSpinner, faExclamationCircle);
 
-const username = ref("");
+const auth = useAuth();
+const authData = computed(() => auth.getAuthData);
+const firstName = ref("");
+const lastName = ref("");
 const email = ref("");
 const password = ref("");
 const loading = ref(false);
@@ -101,13 +123,12 @@ async function handleRegister() {
   loading.value = true;
   error.value = null;
   try {
-    const response = await axiosInstance.post("/register", {
-      username: username.value,
+    await auth.registerAction({
+      firstName: firstName.value,
+      lastName: lastName.value,
       email: email.value,
       password: password.value,
     });
-    // Handle successful registration (e.g., redirect, show message)
-    // Example: localStorage.setItem('token', response.data.token);
   } catch (err) {
     error.value = "Registration failed. Please try again.";
     console.error(err);
@@ -124,5 +145,3 @@ export default {
   }
 }
 </script>
-
-<style scoped></style>
