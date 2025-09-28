@@ -31,7 +31,7 @@ export const useAccount = defineStore("account", {
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
-        const response = await httpClient.post("account", accountData, {
+        const response = await httpClient.post("accounts", accountData, {
           headers,
         });
         toast.success("Account added!");
@@ -43,7 +43,7 @@ export const useAccount = defineStore("account", {
 
     async getAccountAction(accountId) {
       try {
-        const response = await httpClient.get("account/" + accountId);
+        const response = await httpClient.get("accounts/" + accountId);
         console.log(response);
       } catch (error) {
         console.log(error);
@@ -55,7 +55,7 @@ export const useAccount = defineStore("account", {
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
-        const response = await httpClient.get("account?page=" + page, {
+        const response = await httpClient.get("accounts?page=" + page, {
           headers,
         });
         this.accounts = response.data;
@@ -70,7 +70,7 @@ export const useAccount = defineStore("account", {
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
-        const response = await httpClient.delete("account/" + accountId, {
+        const response = await httpClient.delete("accounts/" + accountId, {
           headers,
         });
         toast.success("Account deleted!");

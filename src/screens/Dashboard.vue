@@ -3,74 +3,48 @@
     <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
       <h1 class="text-4xl font-bold text-primary mb-4 text-center">Dashboard</h1>
        <!-- Sidebar -->
-      <aside
-        class="w-full md:w-1/4 bg-white rounded-lg shadow p-6 mb-8 md:mb-0"
-      >
-        <h2 class="text-lg font-semibold mb-4">Navigation</h2>
-        <ul class="space-y-2">
-          <li><a href="#" class="text-primary hover:underline">Overview</a></li>
-          <li>
-            <a href="#" class="text-primary hover:underline">My Portfolio</a>
-          </li>
-          <li>
-            <button
-              class="w-full text-left text-primary hover:underline mt-2"
-              @click="isOpen = true"
-            >
-              Add Account
-            </button>
-          </li>
-          <li><a href="#" class="text-primary hover:underline">Settings</a></li>
-        </ul>
-      </aside>
-       <!-- Dashboard Widgets -->
-      <section class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Portfolio Summary Widget -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-xl font-semibold mb-2">Portfolio Summary</h3>
-          <p class="text-3xl font-bold text-primary mb-2">$12,500</p>
-          <p class="text-green-600 font-semibold">+3.5% Today</p>
-        </div>
-        <!-- Market News Widget -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-xl font-semibold mb-2">Market News</h3>
-          <ul class="list-disc pl-5 text-gray-700">
-            <li>Stock XYZ hits all-time high</li>
-            <li>Market volatility expected this week</li>
-            <li>New IPOs launching soon</li>
+      <div class="flex flex-col md:flex-row gap-8">
+        <!-- Sidebar -->
+        <aside class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0">
+          <h2 class="text-lg font-semibold mb-4">Navigation</h2>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-primary hover:underline">Overview</a></li>
+            <li>
+              <a href="#" class="text-primary hover:underline">My Portfolio</a>
+            </li>
+            <li>
+              <button
+                class="w-full text-left text-primary hover:underline mt-2"
+                @click="isOpen = true"
+              >
+                Add Account
+              </button>
+            </li>
+            <li><a href="#" class="text-primary hover:underline">Settings</a></li>
           </ul>
-        </div>
-        <!-- Watchlist Widget -->
-        <div class="bg-white rounded-lg shadow p-6 col-span-1 md:col-span-2">
-          <h3 class="text-xl font-semibold mb-2">Watchlist</h3>
-          <table class="w-full text-left">
-            <thead>
-              <tr>
-                <th class="py-2">Symbol</th>
-                <th class="py-2">Price</th>
-                <th class="py-2">Change</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>APPL</td>
-                <td>$180.50</td>
-                <td class="text-green-600">+1.2%</td>
-              </tr>
-              <tr>
-                <td>GOOG</td>
-                <td>$2,800.00</td>
-                <td class="text-red-600">-0.5%</td>
-              </tr>
-              <tr>
-                <td>TSLA</td>
-                <td>$700.00</td>
-                <td class="text-green-600">+2.1%</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+        </aside>
+        <!-- Dashboard Widgets -->
+        <section class="md:w-4/5 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Portfolio Summary Widget -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-2">Portfolio Summary</h3>
+            <p class="text-3xl font-bold text-primary mb-2">$12,500</p>
+            <p class="text-green-600 font-semibold">+3.5% Today</p>
+          </div>
+          <!-- Market News Widget -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-2">Accounts</h3>
+            <div v-if="accounts.length === 0" class="text-gray-500">No accounts available.</div>
+            <ul v-else class="space-y-4 max-h-64 overflow-y-auto">
+              <li v-for="account in accounts" :key="account._id" class="border-b pb-2">
+                <h4 class="text-lg font-semibold">{{ account.bankName }}</h4>
+                <p>Account Number: {{ account.accountNumber }}</p>
+                <p>Balance: {{ account.balance }} {{ account.currency }}</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
     <TransitionRoot appear :show="isOpen" as="template">
         <Dialog as="div" @close="closeModal" class="relative z-10">
@@ -99,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useAccount } from '../stores/account';
 import {
   Dialog,
@@ -117,9 +91,36 @@ import AccountForm from "../components/AccountForm.vue";
 
 const isOpen = ref(false);
 const errorMessage = ref("");
+const accountStore = useAccount();
+
+const accounts = computed(() => accountStore.accounts);
 
 function closeModal() {
   isOpen.value = false;
   errorMessage.value = "";
 }
+
+const addAccountActionUtil = async (accountData) => {
+  try {
+    await accountStore.addAccount(accountData);
+    errorMessage.value = "";
+    closeModal();
+    await getAccounts();
+  } catch (error) {
+    errorMessage.value = error.message || "Failed to add account.";
+  }
+};
+
+const getAccounts = async () => {
+  try {
+    await accountStore.getAccountsAction();
+  } catch (error) {
+    console.error("Failed to fetch accounts:", error);
+  }
+};
+
+onMounted(() => {
+  getAccounts();
+});
+
 </script>

@@ -3,6 +3,7 @@
     @submit.prevent="submitForm"
     class="max-w-md mx-auto flex flex-col gap-4 bg-white p-6 rounded shadow"
   >
+    <h2 class="text-xl font-semibold mb-2 text-center">Account</h2>
     <div>
       <label for="accountNumber" class="block font-semibold mb-1"
         >Account Number</label
@@ -69,6 +70,15 @@
 <script setup>
 import { reactive } from "vue";
 
+defineProps({
+  errorMessage: {
+    type: String,
+    default: "",
+  },
+});
+
+const emits = defineEmits(["add-account-action", "close-modal"]);
+
 const form = reactive({
   accountNumber: "",
   bankName: "",
@@ -77,6 +87,23 @@ const form = reactive({
 });
 
 function submitForm() {
-  alert(`Account Created:\n${JSON.stringify(form, null, 2)}`);
+    if (!form.accountNumber || !form.bankName || form.balance === null || !form.currency) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    if (form.accountNumber.length > 20) {
+        alert("Account Number cannot exceed 20 characters.");
+        return;
+    }
+    if (form.bankName.length > 50) {
+        alert("Bank Name cannot exceed 50 characters.");
+        return;
+    }
+    if (form.balance < 0) {
+        alert("Balance cannot be negative.");
+        return;
+    }
+    // Emit the form data to the parent component
+    emits("add-account-action", { ...form });
 }
 </script>
