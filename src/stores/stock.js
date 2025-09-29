@@ -26,12 +26,12 @@ export const useStock = defineStore("stock", {
   },
 
   actions: {
-    async addStock(stockData) {
+    async buyStockAction(payload) {
       try {
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
-        const response = await httpClient.post("stocks", stockData, {
+        const response = await httpClient.post("stocks", payload, {
           headers,
         });
         toast.success("Stock added!");
@@ -68,42 +68,6 @@ export const useStock = defineStore("stock", {
         if (error.response && error.response.status === 401) {
           auth.logout();
         }
-        return error;
-      }
-    },
-
-    async deleteStock(stockId) {
-      try {
-        const headers = {
-          Authorization: `Bearer ${auth.authData.token}`,
-        };
-        const response = await httpClient.delete("stocks/" + stockId, {
-          headers,
-        });
-        toast.success("Stock deleted!");
-        return response.data;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    },
-
-    async updateStock(stockId, stockData) {
-      try {
-        const headers = {
-          Authorization: `Bearer ${auth.authData.token}`,
-        };
-        const response = await httpClient.patch(
-          `stocks/${stockId}`,
-          stockData,
-          { headers }
-        );
-        if (response.status === 200) {
-          toast.success("Stock updated successfully!");
-          return response.data;
-        }
-      } catch (error) {
-        console.log(error);
         return error;
       }
     },

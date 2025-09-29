@@ -56,17 +56,8 @@
         </div>
         <div v-if="defaultAccount" class="mt-6">
           <form
-            @submit.prevent="buyStockUtil(defaultAccount, stockData.ticker, Number(buyShares))"
             class="flex items-center space-x-4"
           >
-            <input
-              v-model="buyShares"
-              type="number"
-              min="1"
-              placeholder="Shares"
-              class="border rounded px-2 py-1 w-24"
-              required
-            />
             <button
               @click.prevent="openStockForm"
               type="button"
@@ -204,6 +195,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useAuth } from "../stores/auth";
 import { useAccount } from "../stores/account";
+import { useStock } from "../stores/stock";
 import { useRoute } from "vue-router";
 import { axiosInstance } from "../plugins/interceptor";
 import StockForm from "../components/StockForm.vue";
@@ -230,7 +222,7 @@ const stockRecommendations = ref([]);
 const search = ref("");
 const authStore = useAuth();
 const accountStore = useAccount();
-const buyShares = ref(1);
+const stockStore = useStock();
 const isStockFormOpen = ref(false);
 
 const authData = computed(() => authStore.authData);
@@ -315,14 +307,21 @@ async function fetchRecommendations() {
   }
 }
 
-const buyStockUtil = async (account, symbol, shares) => {
+const buyStockUtil = async (formData) => {
   try {
-    await accountStore.buyStock(account._id, {
-      symbol,
-      shares,
-    });
+    const payload = {
+      symbol: stockData.value.ticker,
+      buy_price: stockQuote.value.c,
+      quantity: Number(formData.quantity),
+      account: defaultAccount.value._id,
+      comments: formData.comments || ""
+    }
+    console.log("Buying stock with payload:", payload);
+    await stockStore.buyStockAction(payload);
+    closeStockForm();
+    // refresh accounts to reflect new balance
     await accountStore.getAccountsAction();
-    alert(`Successfully bought ${shares} shares of ${symbol}`);
+    alert(`Successfully bought ${payload.quantity} shares of ${payload.symbol}`);
   } catch (error) {
     console.error("Failed to buy stock:", error);
     alert("Failed to buy stock: " + (error.message || "Unknown error"));

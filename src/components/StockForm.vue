@@ -61,7 +61,7 @@ const form = reactive({
 // destructure from props for easier access
 const { stock, defaultAccount, stockQuote } = props;
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["add-stock-action"]);
 
 // check default balance and the stock price to disable buy button if balance is less than stock price
 const canBuyStock = computed(() => {
@@ -75,7 +75,7 @@ const maxQuantity = computed(() => {
 });
 
 function submitForm() {
-  emit("submit", { ...form });
+  emit("add-stock-action", { ...form });
   form.symbol = "";
   form.quantity = 1;
   form.comments = "";

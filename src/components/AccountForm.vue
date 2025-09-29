@@ -70,13 +70,6 @@
 <script setup>
 import { reactive } from "vue";
 
-defineProps({
-  errorMessage: {
-    type: String,
-    default: "",
-  },
-});
-
 const emits = defineEmits(["add-account-action", "close-modal"]);
 
 const form = reactive({
