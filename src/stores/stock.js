@@ -34,7 +34,9 @@ export const useStock = defineStore("stock", {
         const response = await httpClient.post("stocks", payload, {
           headers,
         });
-        toast.success("Stock added!");
+        if (response.status === 201) {
+          toast.success("Stock added!");
+        }
         return response.data;
       } catch (error) {
         console.log(error);

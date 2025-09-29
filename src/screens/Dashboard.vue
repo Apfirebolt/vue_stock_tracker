@@ -1,14 +1,20 @@
 <template>
   <div class="min-h-screen bg-info">
     <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
-      <h1 class="text-4xl font-bold text-primary mb-4 text-center">Dashboard</h1>
-       <!-- Sidebar -->
+      <h1 class="text-4xl font-bold text-primary mb-4 text-center">
+        Dashboard
+      </h1>
+      <!-- Sidebar -->
       <div class="flex flex-col md:flex-row gap-8">
         <!-- Sidebar -->
-        <aside class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0">
+        <aside
+          class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0"
+        >
           <h2 class="text-lg font-semibold mb-4">Navigation</h2>
           <ul class="space-y-2">
-            <li><a href="#" class="text-primary hover:underline">Overview</a></li>
+            <li>
+              <a href="#" class="text-primary hover:underline">Overview</a>
+            </li>
             <li>
               <a href="#" class="text-primary hover:underline">My Portfolio</a>
             </li>
@@ -20,7 +26,9 @@
                 Add Account
               </button>
             </li>
-            <li><a href="#" class="text-primary hover:underline">Settings</a></li>
+            <li>
+              <a href="#" class="text-primary hover:underline">Settings</a>
+            </li>
           </ul>
         </aside>
         <!-- Dashboard Widgets -->
@@ -31,13 +39,46 @@
             <p class="text-3xl font-bold text-primary mb-2">$12,500</p>
             <p class="text-green-600 font-semibold">+3.5% Today</p>
           </div>
+          <!-- Stocks List Widget -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-2">Stocks</h3>
+            <div v-if="stocks.length === 0" class="text-gray-500">
+              No stocks available.
+            </div>
+            <ul v-else class="space-y-4 max-h-64 overflow-y-auto">
+              <li
+                v-for="stock in stocks"
+                :key="stock._id"
+                class="border-b pb-2"
+              >
+                <div class="flex flex-col">
+                  <span class="font-bold text-primary">{{ stock.symbol }}</span>
+                  <span>Buy Price: ${{ stock.buy_price }}</span>
+                  <span>Quantity: {{ stock.quantity }}</span>
+                  <span v-if="stock.comments" class="text-gray-500 text-sm"
+                    >Comments: {{ stock.comments }}</span
+                  >
+                </div>
+              </li>
+            </ul>
+          </div>
           <!-- Market News Widget -->
           <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-xl font-semibold mb-2">Accounts</h3>
-            <div v-if="accounts.length === 0" class="text-gray-500">No accounts available.</div>
+            <div v-if="accounts.length === 0" class="text-gray-500">
+              No accounts available.
+            </div>
             <ul v-else class="space-y-4 max-h-64 overflow-y-auto">
-              <li v-for="account in accounts" :key="account._id" class="border-b pb-2">
-                <AccountCard :account="account" @add-balance="setAccountBalanceUtil" @set-default="setAccountDefaultUtil" />
+              <li
+                v-for="account in accounts"
+                :key="account._id"
+                class="border-b pb-2"
+              >
+                <AccountCard
+                  :account="account"
+                  @add-balance="setAccountBalanceUtil"
+                  @set-default="setAccountDefaultUtil"
+                />
               </li>
             </ul>
           </div>
@@ -45,34 +86,55 @@
       </div>
     </div>
     <TransitionRoot appear :show="isOpen" as="template">
-        <Dialog as="div" @close="closeModal" class="relative z-10">
-          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
-            leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-            <div class="fixed inset-0 bg-black/25" />
-          </TransitionChild>
+      <Dialog as="div" @close="closeModal" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
 
-          <div class="fixed inset-0 overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4 text-center">
-              <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
-                enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
-                leave-to="opacity-0 scale-95">
-                <DialogPanel
-                  class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div class="mt-2">
-                    <AccountForm @add-account-action="addAccountActionUtil" @close-modal="closeModal" :errorMessage="errorMessage" />
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <div class="mt-2">
+                  <AccountForm
+                    @add-account-action="addAccountActionUtil"
+                    @close-modal="closeModal"
+                    :errorMessage="errorMessage"
+                  />
+                </div>
+              </DialogPanel>
+            </TransitionChild>
           </div>
-        </Dialog>
-      </TransitionRoot>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useAccount } from '../stores/account';
+import { useAccount } from "../stores/account";
+import { useStock } from "../stores/stock";
 import { useAuth } from "../stores/auth";
 import {
   Dialog,
@@ -84,18 +146,20 @@ import {
   TransitionChild,
   TransitionRoot,
   DialogTitle,
-  DialogPanel
-} from '@headlessui/vue'
+  DialogPanel,
+} from "@headlessui/vue";
 import AccountForm from "../components/AccountForm.vue";
 import AccountCard from "../components/AccountCard.vue";
 
 const isOpen = ref(false);
 const errorMessage = ref("");
+const stockStore = useStock();
 const accountStore = useAccount();
 const authStore = useAuth();
 
 const authData = computed(() => authStore.authData);
 const accounts = computed(() => accountStore.accounts);
+const stocks = computed(() => stockStore.stocks);
 
 function closeModal() {
   isOpen.value = false;
@@ -139,8 +203,16 @@ const getAccounts = async () => {
   }
 };
 
+const getStocks = async () => {
+  try {
+    await stockStore.getStocksAction();
+  } catch (error) {
+    console.error("Failed to fetch stocks:", error);
+  }
+};
+
 onMounted(() => {
   getAccounts();
+  getStocks();
 });
-
 </script>
