@@ -68,23 +68,12 @@
               required
             />
             <button
-              @click="openStockForm"
+              @click.prevent="openStockForm"
               type="button"
-                :class="[
-                'px-4 py-2 rounded transition',
-                canBuyStock
-                  ? 'bg-primary text-white hover:bg-primary-dark'
-                  : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                ]"
-              :disabled="!canBuyStock"
+              class="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700 transition"
             >
               Buy Stock
             </button>
-            <p>
-              <small class="text-gray-600"
-                >Max: {{ maxQuantity }} shares (based on your balance)</small
-              >
-            </p>
           </form>
         </div>
     
@@ -200,7 +189,7 @@
                 <DialogPanel
                   class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <div class="mt-2">
-                    <StockForm @add-stock-action="buyStockUtil" @close-modal="closeStockForm" :errorMessage="errorMessage" />
+                    <StockForm @add-stock-action="buyStockUtil" @close-modal="closeStockForm" :errorMessage="errorMessage" :stock="stockData" :defaultAccount="defaultAccount" :stockQuote="stockQuote" />
                   </div>
                 </DialogPanel>
               </TransitionChild>
@@ -256,17 +245,6 @@ const closeStockForm = () => {
 const openStockForm = () => {
   isStockFormOpen.value = true;
 };
-
-// check default balance and the stock price to disable buy button if balance is less than stock price
-const canBuyStock = computed(() => {
-  if (!defaultAccount.value || !stockQuote.value) return false;
-  return defaultAccount.value.balance >= stockQuote.value.c * buyShares.value;
-});
-
-const maxQuantity = computed(() => {
-  if (!defaultAccount.value || !stockQuote.value) return 0;
-  return Math.floor(defaultAccount.value.balance / stockQuote.value.c);
-});
 
 async function fetchData() {
   loading.value = true;
