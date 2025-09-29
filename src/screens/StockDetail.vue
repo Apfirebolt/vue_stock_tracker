@@ -2,6 +2,21 @@
   <div class="min-h-screen bg-info">
     <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
       <h1 class="text-4xl font-bold text-primary mb-4 text-center">Symbols</h1>
+      <div
+        v-if="defaultAccount"
+        class="mb-6 p-4 bg-gray-100 rounded flex items-center justify-between"
+      >
+        <div>
+          <div class="text-lg font-semibold text-primary">Primary Account</div>
+          <div class="text-gray-700">Name: {{ defaultAccount.bankName }}</div>
+          <div class="text-gray-700">
+            ID: {{ defaultAccount.accountNumber }}
+          </div>
+          <div class="text-gray-700">
+            Balance: ${{ defaultAccount.balance }}
+          </div>
+        </div>
+      </div>
       <div v-if="loading" class="text-gray-500">Loading...</div>
       <div v-else-if="error" class="text-red-500">{{ error }}</div>
       <div v-else-if="stockData" class="space-y-4">
@@ -39,6 +54,40 @@
             >
           </p>
         </div>
+        <div v-if="defaultAccount" class="mt-6">
+          <form
+            @submit.prevent="buyStockUtil(defaultAccount, stockData.ticker, Number(buyShares))"
+            class="flex items-center space-x-4"
+          >
+            <input
+              v-model="buyShares"
+              type="number"
+              min="1"
+              placeholder="Shares"
+              class="border rounded px-2 py-1 w-24"
+              required
+            />
+            <button
+              @click="openStockForm"
+              type="button"
+                :class="[
+                'px-4 py-2 rounded transition',
+                canBuyStock
+                  ? 'bg-primary text-white hover:bg-primary-dark'
+                  : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                ]"
+              :disabled="!canBuyStock"
+            >
+              Buy Stock
+            </button>
+            <p>
+              <small class="text-gray-600"
+                >Max: {{ maxQuantity }} shares (based on your balance)</small
+              >
+            </p>
+          </form>
+        </div>
+    
         <!-- Stock Quote -->
         <div v-if="stockQuote" class="mt-8">
           <h3 class="text-xl font-bold mb-2">Stock Quote</h3>
@@ -136,13 +185,51 @@
       </div>
       <div v-else class="text-gray-500">No data available.</div>
     </div>
+    <TransitionRoot appear :show="isStockFormOpen" as="template">
+        <Dialog as="div" @close="closeStockForm" class="relative z-10">
+          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
+            leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
+            <div class="fixed inset-0 bg-black/25" />
+          </TransitionChild>
+
+          <div class="fixed inset-0 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center">
+              <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
+                enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
+                leave-to="opacity-0 scale-95">
+                <DialogPanel
+                  class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <div class="mt-2">
+                    <StockForm @add-stock-action="buyStockUtil" @close-modal="closeStockForm" :errorMessage="errorMessage" />
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useAuth } from "../stores/auth";
+import { useAccount } from "../stores/account";
 import { useRoute } from "vue-router";
 import { axiosInstance } from "../plugins/interceptor";
+import StockForm from "../components/StockForm.vue";
+import {
+  Dialog,
+  DialogOverlay,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  TransitionChild,
+  TransitionRoot,
+  DialogTitle,
+  DialogPanel
+} from '@headlessui/vue'
 
 const route = useRoute();
 const loading = ref(false);
@@ -152,6 +239,34 @@ const stockData = ref(null);
 const stockNews = ref([]);
 const stockRecommendations = ref([]);
 const search = ref("");
+const authStore = useAuth();
+const accountStore = useAccount();
+const buyShares = ref(1);
+const isStockFormOpen = ref(false);
+
+const authData = computed(() => authStore.authData);
+const accounts = computed(() => accountStore.accounts);
+const defaultAccount = computed(() =>
+  accounts.value.find((acc) => acc.isDefault)
+);
+
+const closeStockForm = () => {
+  isStockFormOpen.value = false;
+};
+const openStockForm = () => {
+  isStockFormOpen.value = true;
+};
+
+// check default balance and the stock price to disable buy button if balance is less than stock price
+const canBuyStock = computed(() => {
+  if (!defaultAccount.value || !stockQuote.value) return false;
+  return defaultAccount.value.balance >= stockQuote.value.c * buyShares.value;
+});
+
+const maxQuantity = computed(() => {
+  if (!defaultAccount.value || !stockQuote.value) return 0;
+  return Math.floor(defaultAccount.value.balance / stockQuote.value.c);
+});
 
 async function fetchData() {
   loading.value = true;
@@ -222,6 +337,20 @@ async function fetchRecommendations() {
   }
 }
 
+const buyStockUtil = async (account, symbol, shares) => {
+  try {
+    await accountStore.buyStock(account._id, {
+      symbol,
+      shares,
+    });
+    await accountStore.getAccountsAction();
+    alert(`Successfully bought ${shares} shares of ${symbol}`);
+  } catch (error) {
+    console.error("Failed to buy stock:", error);
+    alert("Failed to buy stock: " + (error.message || "Unknown error"));
+  }
+};
+
 function refresh() {
   fetchData();
   fetchNews();
@@ -240,7 +369,9 @@ onMounted(() => {
   } else {
     error.value = "No symbol provided in route parameters.";
   }
+  // fetch accounts if not already fetched
+  if (accounts.value.length === 0) {
+    accountStore.getAccountsAction();
+  }
 });
 </script>
-
-<style scoped></style>

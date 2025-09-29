@@ -73,6 +73,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useAccount } from '../stores/account';
+import { useAuth } from "../stores/auth";
 import {
   Dialog,
   DialogOverlay,
@@ -91,7 +92,9 @@ import AccountCard from "../components/AccountCard.vue";
 const isOpen = ref(false);
 const errorMessage = ref("");
 const accountStore = useAccount();
+const authStore = useAuth();
 
+const authData = computed(() => authStore.authData);
 const accounts = computed(() => accountStore.accounts);
 
 function closeModal() {

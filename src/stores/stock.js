@@ -1,0 +1,116 @@
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import { httpClient } from "../plugins/interceptor";
+import { useAuth } from "./auth";
+import { toast } from "vue3-toastify";
+
+const auth = useAuth();
+
+export const useStock = defineStore("stock", {
+  state: () => ({
+    stock: ref({}),
+    stocks: ref([]),
+    loading: ref(false),
+  }),
+
+  getters: {
+    getStock() {
+      return this.stock;
+    },
+    getStocks() {
+      return this.stocks;
+    },
+    isLoading() {
+      return this.loading;
+    },
+  },
+
+  actions: {
+    async addStock(stockData) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.post("stocks", stockData, {
+          headers,
+        });
+        toast.success("Stock added!");
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    async getStockAction(stockId) {
+      try {
+        const response = await httpClient.get("stocks/" + stockId);
+        this.stock = response.data;
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    async getStocksAction(page = 1) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.get("stocks?page=" + page, {
+          headers,
+        });
+        this.stocks = response.data;
+        return response.data;
+      } catch (error) {
+        console.log("Some error occurred while fetching stocks:", error);
+        if (error.response && error.response.status === 401) {
+          auth.logout();
+        }
+        return error;
+      }
+    },
+
+    async deleteStock(stockId) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.delete("stocks/" + stockId, {
+          headers,
+        });
+        toast.success("Stock deleted!");
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    async updateStock(stockId, stockData) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.patch(
+          `stocks/${stockId}`,
+          stockData,
+          { headers }
+        );
+        if (response.status === 200) {
+          toast.success("Stock updated successfully!");
+          return response.data;
+        }
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    resetStockData() {
+      this.stock = {};
+      this.stocks = [];
+    },
+  },
+});

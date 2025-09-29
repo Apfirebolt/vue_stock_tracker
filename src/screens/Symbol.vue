@@ -2,6 +2,10 @@
   <div class="min-h-screen bg-info">
     <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
       <h1 class="text-4xl font-bold text-primary mb-4 text-center">Symbols</h1>
+      <p class="text-gray-600 mb-4 text-center">
+        Find the stock symbol you're looking for.
+      </p>
+      
       <div class="mb-6">
         <input
           v-model="search"
@@ -19,31 +23,35 @@
       </div>
       <div v-if="loading" class="text-gray-500">Loading...</div>
       <div v-else-if="error" class="text-red-500">{{ error }}</div>
-        <div v-else-if="stockData" class="space-y-4">
-          <div v-for="item in stockData.result" :key="item.symbol" class="p-4 border rounded hover:shadow-lg transition">
-              <div class="flex items-center space-x-4">
-                <div>
-                  <h2 class="text-2xl font-semibold">{{ item.description }}</h2>
-                  <p class="text-gray-600">
-                    {{ item.displaySymbol }} &mdash; {{ item.type }}
-                  </p>
-                <button
-                    @click="navigateToDetails(item.symbol)"
-                    class="mt-2 bg-secondary text-white px-3 py-1 rounded"
-                >
-                    View Details
-                </button>
-              </div>
+      <div v-else-if="stockData" class="space-y-4">
+        <div
+          v-for="item in stockData.result"
+          :key="item.symbol"
+          class="p-4 border rounded hover:shadow-lg transition"
+        >
+          <div class="flex items-center space-x-4">
+            <div>
+              <h2 class="text-2xl font-semibold">{{ item.description }}</h2>
+              <p class="text-gray-600">
+                {{ item.displaySymbol }} &mdash; {{ item.type }}
+              </p>
+              <button
+                @click="navigateToDetails(item.symbol)"
+                class="mt-2 bg-secondary text-white px-3 py-1 rounded"
+              >
+                View Details
+              </button>
             </div>
           </div>
         </div>
+      </div>
       <div v-else class="text-gray-500">No data available.</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { axiosInstance } from "../plugins/interceptor";
 
@@ -71,15 +79,14 @@ async function fetchData() {
 
 const navigateToDetails = (symbol) => {
   // Navigate to the StockDetail page with the selected symbol
-  router.push({ name: 'StockDetail', params: { symbol } });
+  router.push({ name: "StockDetail", params: { symbol } });
 };
-
 
 function refresh() {
   fetchData();
 }
 
-onMounted(fetchData);
+onMounted(() => {
+  fetchData();
+});
 </script>
-
-<style scoped></style>
