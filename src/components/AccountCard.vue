@@ -34,7 +34,7 @@
       <button
         class="px-3 py-1 bg-secondary text-white rounded hover:bg-gray-300 transition"
         :disabled="account.isDefault"
-        @click="accountStore.setDefaultAccount(account._id)"
+        @click="setDefault"
       >
         <span v-if="account.isDefault">Default</span>
         <span v-else>Make Default</span>
@@ -67,6 +67,10 @@ const addBalance = () => {
     balance.value = 0;
     showAddBalance.value = false;
   }
+};
+
+const setDefault = () => {
+  emits('set-default', props.account);
 };
 
 </script>

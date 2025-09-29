@@ -104,13 +104,13 @@ export const useAccount = defineStore("account", {
       }
     },
 
-    async setAccountDefault(accountId) {
+    async setDefaultAccount(accountId) {
       try {
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
-        const response = await httpClient.post(
-          `accounts/${accountId}/set-default`,
+        const response = await httpClient.patch(
+          `accounts/${accountId}/default`,
           {},
           { headers }
         );

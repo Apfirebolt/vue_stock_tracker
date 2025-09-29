@@ -119,9 +119,9 @@ const setAccountBalanceUtil = async (account, balance) => {
   }
 };
 
-const setAccountDefaultUtil = async (accountId) => {
+const setAccountDefaultUtil = async (account) => {
   try {
-    await accountStore.setDefaultAccount(accountId);
+    await accountStore.setDefaultAccount(account._id);
     await getAccounts();
   } catch (error) {
     console.error("Failed to set default account:", error);
