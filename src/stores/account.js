@@ -60,7 +60,11 @@ export const useAccount = defineStore("account", {
         });
         this.accounts = response.data;
       } catch (error) {
-        console.log(error);
+        // handle 401 error code
+        console.log('Some error occurred while fetching accounts:', error);
+        if (error.response && error.response.status === 401) {
+          auth.logout();
+        }
         return error;
       }
     },
@@ -74,6 +78,46 @@ export const useAccount = defineStore("account", {
           headers,
         });
         toast.success("Account deleted!");
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    async addBalanceToAccount(accountId, balanceData) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.post(
+          `accounts/${accountId}/add-balance`,
+          balanceData,
+          { headers }
+        );
+        if (response.status === 200) {
+          toast.success("Balance added successfully!");
+          return response.data;
+        }
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
+    async setAccountDefault(accountId) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.post(
+          `accounts/${accountId}/set-default`,
+          {},
+          { headers }
+        );
+        if (response.status === 200) {
+          toast.success("Account set as default!");
+          return response.data;
+        }
       } catch (error) {
         console.log(error);
         return error;

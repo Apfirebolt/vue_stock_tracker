@@ -37,9 +37,7 @@
             <div v-if="accounts.length === 0" class="text-gray-500">No accounts available.</div>
             <ul v-else class="space-y-4 max-h-64 overflow-y-auto">
               <li v-for="account in accounts" :key="account._id" class="border-b pb-2">
-                <h4 class="text-lg font-semibold">{{ account.bankName }}</h4>
-                <p>Account Number: {{ account.accountNumber }}</p>
-                <p>Balance: {{ account.balance }} {{ account.currency }}</p>
+                <AccountCard :account="account" @add-balance="setAccountBalanceUtil" @set-default="setAccountDefaultUtil" />
               </li>
             </ul>
           </div>
@@ -88,6 +86,7 @@ import {
   DialogPanel
 } from '@headlessui/vue'
 import AccountForm from "../components/AccountForm.vue";
+import AccountCard from "../components/AccountCard.vue";
 
 const isOpen = ref(false);
 const errorMessage = ref("");
@@ -108,6 +107,25 @@ const addAccountActionUtil = async (accountData) => {
     await getAccounts();
   } catch (error) {
     errorMessage.value = error.message || "Failed to add account.";
+  }
+};
+
+const setAccountBalanceUtil = async (account, amount) => {
+  try {
+    console.log("Setting balance for account:", account, "with amount:", amount);
+    // await accountStore.setAccountBalance({ account, amount });
+    // await getAccounts();
+  } catch (error) {
+    console.error("Failed to set account balance:", error);
+  }
+};
+
+const setAccountDefaultUtil = async (accountId) => {
+  try {
+    await accountStore.setDefaultAccount(accountId);
+    await getAccounts();
+  } catch (error) {
+    console.error("Failed to set default account:", error);
   }
 };
 
