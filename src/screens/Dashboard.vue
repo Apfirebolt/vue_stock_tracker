@@ -110,11 +110,10 @@ const addAccountActionUtil = async (accountData) => {
   }
 };
 
-const setAccountBalanceUtil = async (account, amount) => {
+const setAccountBalanceUtil = async (account, balance) => {
   try {
-    console.log("Setting balance for account:", account, "with amount:", amount);
-    // await accountStore.setAccountBalance({ account, amount });
-    // await getAccounts();
+    await accountStore.setAccountBalance(account._id, { balance });
+    await getAccounts();
   } catch (error) {
     console.error("Failed to set account balance:", error);
   }

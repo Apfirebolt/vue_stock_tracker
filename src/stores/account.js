@@ -84,13 +84,13 @@ export const useAccount = defineStore("account", {
       }
     },
 
-    async addBalanceToAccount(accountId, balanceData) {
+    async setAccountBalance(accountId, balanceData) {
       try {
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
-        const response = await httpClient.post(
-          `accounts/${accountId}/add-balance`,
+        const response = await httpClient.patch(
+          `accounts/${accountId}/balance`,
           balanceData,
           { headers }
         );
