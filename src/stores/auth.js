@@ -73,9 +73,9 @@ export const useAuth = defineStore("auth", {
       try {
         const authData = Cookie.get("user");
         const headers = {
-          Authorization: `Bearer ${JSON.parse(authData).access}`,
+          Authorization: `Bearer ${JSON.parse(authData).token}`,
         };
-        const response = await httpClient.get("profile", { headers });
+        const response = await httpClient.get("auth/profile", { headers });
         this.profileData = response.data;
         return response.data;
       } catch (error) {
@@ -95,10 +95,11 @@ export const useAuth = defineStore("auth", {
       this.loading = true;
       try {
         const authData = Cookie.get("user");
+        console.log('Auth data:', authData);
         const headers = {
-          Authorization: `Bearer ${JSON.parse(authData).access}`,
+          Authorization: `Bearer ${JSON.parse(authData).token}`,
         };
-        const response = await httpClient.put("profile", profileData, { headers });
+        const response = await httpClient.put("auth/profile", profileData, { headers });
         if (response.status === 200) {
           this.profileData = response.data;
           this.success = true;

@@ -40,6 +40,12 @@ const routes = [
         beforeEnter: authGuard
     },
     {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('../screens/Profile.vue'),
+        beforeEnter: authGuard
+    },
+    {
         path: '/symbol',
         name: 'Symbol',
         component: () => import('../screens/Symbol.vue')
