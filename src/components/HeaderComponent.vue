@@ -16,6 +16,9 @@
             <h2 class="text-2xl text-white font-bold">
               <router-link to="/" class="text-2xl text-white font-bold">
                 Stocks Tracker
+                <span v-if="authData" class="ml-4 text-lg font-semibold">
+                  Welcome, {{ authData.email }}!
+                </span>
               </router-link>
             </h2>
           </div>
