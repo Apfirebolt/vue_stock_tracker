@@ -19,26 +19,31 @@
         </p>
         <ul v-if="stocks.length > 0" class="space-y-4">
           <li v-for="stock in stocks" :key="stock._id" class="border-b pb-2">
-            <div class="flex flex-col">
-              <span class="font-bold text-primary">{{ stock.symbol }}</span>
-              <span>Buy Price: ${{ stock.buy_price }}</span>
+            <div class="flex flex-col bg-neutral-100">
               <span
-                v-if="stockBuyAndCurrentValue[stock.symbol]"
-                :class="
-                  stockBuyAndCurrentValue[stock.symbol].currentPrice >
-                  stockBuyAndCurrentValue[stock.symbol].buyPrice
-                    ? 'text-green-600'
-                    : 'text-red-600'
-                "
+                class="font-bold text-primary bg-neutral-200 shadow-md px-2 py-3 text-center mb-3"
+                >{{ stock.symbol }}</span
               >
-                Current Price: ${{
-                  stockBuyAndCurrentValue[stock.symbol].currentPrice
-                }}
-              </span>
-              <span>Quantity: {{ stock.quantity }}</span>
-              <span v-if="stock.comments" class="text-gray-500 text-sm"
-                >Comments: {{ stock.comments }}</span
-              >
+              <div class="px-4 py-2 flex flex-col">
+                <span>Buy Price: ${{ stock.buy_price }}</span>
+                <span
+                  v-if="stockBuyAndCurrentValue[stock.symbol]"
+                  :class="
+                    stockBuyAndCurrentValue[stock.symbol].currentPrice >
+                    stockBuyAndCurrentValue[stock.symbol].buyPrice
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  "
+                >
+                  Current Price: ${{
+                    stockBuyAndCurrentValue[stock.symbol].currentPrice
+                  }}
+                </span>
+                <span>Quantity: {{ stock.quantity }}</span>
+                <span v-if="stock.comments" class="text-gray-500 text-sm"
+                  >Comments: {{ stock.comments }}</span
+                >
+              </div>
             </div>
           </li>
         </ul>
@@ -51,10 +56,10 @@
 import { ref, onMounted, computed } from "vue";
 import { axiosInstance } from "../plugins/interceptor";
 const props = defineProps({
-    stocks: {
-        type: Array,
-        required: true,
-    },
+  stocks: {
+    type: Array,
+    required: true,
+  },
 });
 
 const stocks = props.stocks;
@@ -63,10 +68,7 @@ const currentValue = ref(0);
 const stockBuyAndCurrentValue = ref({});
 
 const totalInvested = computed(() =>
-  stocks.reduce(
-    (total, stock) => total + stock.buy_price * stock.quantity,
-    0
-  )
+  stocks.reduce((total, stock) => total + stock.buy_price * stock.quantity, 0)
 );
 const computedCurrentValue = computed(() => currentValue.value);
 
