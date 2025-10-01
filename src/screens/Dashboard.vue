@@ -32,35 +32,41 @@
           </ul>
         </aside>
         <!-- Dashboard Widgets -->
-        <section class="md:w-4/5 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Portfolio Summary Widget -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-xl font-semibold mb-2">Portfolio Summary</h3>
-            <p class="text-3xl font-bold text-primary mb-2">$12,500</p>
-            <p class="text-green-600 font-semibold">+3.5% Today</p>
-          </div>
+        <section class="md:w-4/5 w-full grid md:grid-cols-1 gap-8">
           <!-- Stocks List Widget -->
           <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-xl font-semibold mb-2">Stocks</h3>
             <div v-if="stocks.length === 0" class="text-gray-500">
               No stocks available.
             </div>
-            <ul v-else class="space-y-4 max-h-64 overflow-y-auto">
-              <li
-                v-for="stock in stocks"
-                :key="stock._id"
-                class="border-b pb-2"
+            <div>
+              <p class="mb-2">Total Stocks: {{ stocks.length }}</p>
+              <p class="mb-2">
+                Total Invested: $
+                {{ totalInvested.toFixed(2) }}
+              </p>
+              <ul
+                v-if="stocks.length > 0"
+                class="space-y-4 max-h-64 overflow-y-auto"
               >
-                <div class="flex flex-col">
-                  <span class="font-bold text-primary">{{ stock.symbol }}</span>
-                  <span>Buy Price: ${{ stock.buy_price }}</span>
-                  <span>Quantity: {{ stock.quantity }}</span>
-                  <span v-if="stock.comments" class="text-gray-500 text-sm"
-                    >Comments: {{ stock.comments }}</span
-                  >
-                </div>
-              </li>
-            </ul>
+                <li
+                  v-for="stock in stocks"
+                  :key="stock._id"
+                  class="border-b pb-2"
+                >
+                  <div class="flex flex-col">
+                    <span class="font-bold text-primary">{{
+                      stock.symbol
+                    }}</span>
+                    <span>Buy Price: ${{ stock.buy_price }}</span>
+                    <span>Quantity: {{ stock.quantity }}</span>
+                    <span v-if="stock.comments" class="text-gray-500 text-sm"
+                      >Comments: {{ stock.comments }}</span
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
           <!-- Market News Widget -->
           <div class="bg-white rounded-lg shadow p-6">
@@ -160,6 +166,12 @@ const authStore = useAuth();
 const authData = computed(() => authStore.authData);
 const accounts = computed(() => accountStore.accounts);
 const stocks = computed(() => stockStore.stocks);
+const totalInvested = computed(() =>
+  stocks.value.reduce(
+    (total, stock) => total + stock.buy_price * stock.quantity,
+    0
+  )
+);
 
 function closeModal() {
   isOpen.value = false;
