@@ -45,6 +45,10 @@
                 Total Invested: $
                 {{ totalInvested.toFixed(2) }}
               </p>
+              <p class="mb-4">
+                Current Value: $
+                {{ computedCurrentValue.toFixed(2) }}
+              </p>
               <ul
                 v-if="stocks.length > 0"
                 class="space-y-4 max-h-64 overflow-y-auto"
@@ -59,6 +63,12 @@
                       stock.symbol
                     }}</span>
                     <span>Buy Price: ${{ stock.buy_price }}</span>
+                    <span
+                      v-if="stockBuyAndCurrentValue[stock.symbol]"
+                      :class="stockBuyAndCurrentValue[stock.symbol].currentPrice > stockBuyAndCurrentValue[stock.symbol].buyPrice ? 'text-green-600' : 'text-red-600'"
+                    >
+                      Current Price: ${{ stockBuyAndCurrentValue[stock.symbol].currentPrice }}
+                    </span>
                     <span>Quantity: {{ stock.quantity }}</span>
                     <span v-if="stock.comments" class="text-gray-500 text-sm"
                       >Comments: {{ stock.comments }}</span
@@ -142,6 +152,7 @@ import { ref, onMounted, computed } from "vue";
 import { useAccount } from "../stores/account";
 import { useStock } from "../stores/stock";
 import { useAuth } from "../stores/auth";
+import { axiosInstance } from "../plugins/interceptor";
 import {
   Dialog,
   DialogOverlay,
@@ -159,6 +170,8 @@ import AccountCard from "../components/AccountCard.vue";
 
 const isOpen = ref(false);
 const errorMessage = ref("");
+const currentValue = ref(0);
+const stockBuyAndCurrentValue = ref({});
 const stockStore = useStock();
 const accountStore = useAccount();
 const authStore = useAuth();
@@ -172,6 +185,7 @@ const totalInvested = computed(() =>
     0
   )
 );
+const computedCurrentValue = computed(() => currentValue.value);
 
 function closeModal() {
   isOpen.value = false;
@@ -223,8 +237,35 @@ const getStocks = async () => {
   }
 };
 
-onMounted(() => {
-  getAccounts();
-  getStocks();
+// method to go through each stock, check the current price and calculate the current value of invested amount
+const calculateCurrentValues = async () => {
+  for (const stock of stocks.value) {
+    const currentPrice = await calculateCurrentPrice(stock.symbol);
+    if (currentPrice) {
+      currentValue.value += currentPrice * stock.quantity;
+      stockBuyAndCurrentValue.value[stock.symbol] = {
+        buyPrice: stock.buy_price,
+        currentPrice,
+      };
+    }
+  }
+};
+
+const calculateCurrentPrice = async (symbol) => {
+  try {
+    const response = await axiosInstance.get(
+      `/quote?symbol=${symbol}`
+    );
+    return response.data.c;
+  } catch (error) {
+    console.error(`Failed to fetch current price for ${symbol}:`, error);
+    return null;
+  }
+};
+
+onMounted(async () => {
+  await getAccounts();
+  await getStocks();
+  await calculateCurrentValues();
 });
 </script>
