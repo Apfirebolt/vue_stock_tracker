@@ -13,91 +13,52 @@
           <h2 class="text-lg font-semibold mb-4">Navigation</h2>
           <ul class="space-y-2">
             <li>
-              <a href="#" class="text-primary hover:underline">Overview</a>
+              <a
+                href="#"
+                @click.prevent="changeSelectedTab('accounts')"
+                class="block bg-gray-100 hover:bg-primary hover:text-white rounded-md px-4 py-2 text-base font-medium text-primary mb-2 transition"
+              >
+                Accounts
+              </a>
             </li>
             <li>
-              <a href="#" class="text-primary hover:underline">My Portfolio</a>
+              <a
+                href="#"
+                @click.prevent="changeSelectedTab('portfolio')"
+                class="block bg-gray-100 hover:bg-primary hover:text-white rounded-md px-4 py-2 text-base font-medium text-primary mb-2 transition"
+              >
+                My Portfolio
+              </a>
             </li>
             <li>
               <button
-                class="w-full text-left text-primary hover:underline mt-2"
+                class="block w-full bg-gray-100 hover:bg-primary hover:text-white rounded-md px-4 py-2 text-base font-medium text-primary mb-2 text-left transition"
                 @click="isOpen = true"
               >
                 Add Account
               </button>
             </li>
             <li>
-              <a href="#" class="text-primary hover:underline">Settings</a>
+              <a
+                @click.prevent="changeSelectedTab('logs')"
+                class="block bg-gray-100 hover:bg-primary hover:text-white rounded-md px-4 py-2 text-base font-medium text-primary mb-2 transition"
+              >
+                Audit Logs
+              </a>
             </li>
           </ul>
         </aside>
         <!-- Dashboard Widgets -->
         <section class="md:w-4/5 w-full grid md:grid-cols-1 gap-8">
           <!-- Stocks List Widget -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-xl font-semibold mb-2">Stocks</h3>
-            <div v-if="stocks.length === 0" class="text-gray-500">
-              No stocks available.
-            </div>
-            <div>
-              <p class="mb-2">Total Stocks: {{ stocks.length }}</p>
-              <p class="mb-2">
-                Total Invested: $
-                {{ totalInvested.toFixed(2) }}
-              </p>
-              <p class="mb-4">
-                Current Value: $
-                {{ computedCurrentValue.toFixed(2) }}
-              </p>
-              <ul
-                v-if="stocks.length > 0"
-                class="space-y-4 max-h-64 overflow-y-auto"
-              >
-                <li
-                  v-for="stock in stocks"
-                  :key="stock._id"
-                  class="border-b pb-2"
-                >
-                  <div class="flex flex-col">
-                    <span class="font-bold text-primary">{{
-                      stock.symbol
-                    }}</span>
-                    <span>Buy Price: ${{ stock.buy_price }}</span>
-                    <span
-                      v-if="stockBuyAndCurrentValue[stock.symbol]"
-                      :class="stockBuyAndCurrentValue[stock.symbol].currentPrice > stockBuyAndCurrentValue[stock.symbol].buyPrice ? 'text-green-600' : 'text-red-600'"
-                    >
-                      Current Price: ${{ stockBuyAndCurrentValue[stock.symbol].currentPrice }}
-                    </span>
-                    <span>Quantity: {{ stock.quantity }}</span>
-                    <span v-if="stock.comments" class="text-gray-500 text-sm"
-                      >Comments: {{ stock.comments }}</span
-                    >
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <Portfolio v-if="stocks.length > 0 && selectedTab === 'portfolio'" :stocks="stocks" />
           <!-- Market News Widget -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-xl font-semibold mb-2">Accounts</h3>
-            <div v-if="accounts.length === 0" class="text-gray-500">
-              No accounts available.
-            </div>
-            <ul v-else class="space-y-4 max-h-64 overflow-y-auto">
-              <li
-                v-for="account in accounts"
-                :key="account._id"
-                class="border-b pb-2"
-              >
-                <AccountCard
-                  :account="account"
-                  @add-balance="setAccountBalanceUtil"
-                  @set-default="setAccountDefaultUtil"
-                />
-              </li>
-            </ul>
-          </div>
+          <AccountSection v-if="accounts.length > 0 && selectedTab === 'accounts'"
+            :accounts="accounts"
+            :setAccountBalance="setAccountBalanceUtil"
+            :setAccountDefault="setAccountDefaultUtil"
+          />
+          <AuditLog v-if="logs.length > 0 && selectedTab === 'logs'" :logs="logs" />
         </section>
       </div>
     </div>
@@ -150,6 +111,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useAccount } from "../stores/account";
+import { useLog } from "../stores/log";
 import { useStock } from "../stores/stock";
 import { useAuth } from "../stores/auth";
 import { axiosInstance } from "../plugins/interceptor";
@@ -167,25 +129,24 @@ import {
 } from "@headlessui/vue";
 import AccountForm from "../components/AccountForm.vue";
 import AccountCard from "../components/AccountCard.vue";
+import Portfolio from "../components/Portfolio.vue";
+import AccountSection from "../components/AccountSection.vue";
+import AuditLog from "../components/AuditLog.vue";
 
 const isOpen = ref(false);
 const errorMessage = ref("");
 const currentValue = ref(0);
 const stockBuyAndCurrentValue = ref({});
+const selectedTab = ref("portfolio");
 const stockStore = useStock();
 const accountStore = useAccount();
 const authStore = useAuth();
+const logStore = useLog();
 
 const authData = computed(() => authStore.authData);
 const accounts = computed(() => accountStore.accounts);
 const stocks = computed(() => stockStore.stocks);
-const totalInvested = computed(() =>
-  stocks.value.reduce(
-    (total, stock) => total + stock.buy_price * stock.quantity,
-    0
-  )
-);
-const computedCurrentValue = computed(() => currentValue.value);
+const logs = computed(() => logStore.logs);
 
 function closeModal() {
   isOpen.value = false;
@@ -215,7 +176,7 @@ const setAccountBalanceUtil = async (account, balance) => {
 const setAccountDefaultUtil = async (account) => {
   try {
     await accountStore.setDefaultAccount(account._id);
-    await getAccounts();
+    await getAccounts();  
   } catch (error) {
     console.error("Failed to set default account:", error);
   }
@@ -237,35 +198,21 @@ const getStocks = async () => {
   }
 };
 
-// method to go through each stock, check the current price and calculate the current value of invested amount
-const calculateCurrentValues = async () => {
-  for (const stock of stocks.value) {
-    const currentPrice = await calculateCurrentPrice(stock.symbol);
-    if (currentPrice) {
-      currentValue.value += currentPrice * stock.quantity;
-      stockBuyAndCurrentValue.value[stock.symbol] = {
-        buyPrice: stock.buy_price,
-        currentPrice,
-      };
-    }
+const getAuditLogs = async () => {
+  try {
+    await logStore.getLogsAction();
+  } catch (error) {
+    console.error("Failed to fetch audit logs:", error);
   }
 };
 
-const calculateCurrentPrice = async (symbol) => {
-  try {
-    const response = await axiosInstance.get(
-      `/quote?symbol=${symbol}`
-    );
-    return response.data.c;
-  } catch (error) {
-    console.error(`Failed to fetch current price for ${symbol}:`, error);
-    return null;
-  }
+const changeSelectedTab = (tab) => {
+  selectedTab.value = tab;
 };
 
 onMounted(async () => {
   await getAccounts();
   await getStocks();
-  await calculateCurrentValues();
+  await getAuditLogs();
 });
 </script>
