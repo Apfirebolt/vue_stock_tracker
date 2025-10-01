@@ -8,15 +8,20 @@
         No stocks available.
       </div>
       <div>
-        <p class="mb-2">Total Stocks: {{ stocks.length }}</p>
-        <p class="mb-2">
-          Total Invested: $
-          {{ totalInvested.toFixed(2) }}
-        </p>
-        <p class="mb-4">
-          Current Value: $
-          {{ computedCurrentValue.toFixed(2) }}
-        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow">
+                <span class="text-lg font-semibold">Total Stocks</span>
+                <span class="text-2xl">{{ stocks.length }}</span>
+            </div>
+            <div class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow">
+                <span class="text-lg font-semibold">Total Invested</span>
+                <span class="text-2xl">${{ totalInvested.toFixed(2) }}</span>
+            </div>
+            <div class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow">
+                <span class="text-lg font-semibold">Current Value</span>
+                <span class="text-2xl">${{ computedCurrentValue.toFixed(2) }}</span>
+            </div>
+        </div>
         <ul v-if="stocks.length > 0" class="space-y-4">
           <li v-for="stock in stocks" :key="stock._id" class="border-b pb-2">
             <div class="flex flex-col bg-neutral-100">

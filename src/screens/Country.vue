@@ -34,7 +34,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axiosInstance from "../plugins/interceptor";
+import { axiosInstance } from "../plugins/interceptor";
 
 const loading = ref(false);
 const error = ref(null);

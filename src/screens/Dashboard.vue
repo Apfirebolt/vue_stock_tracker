@@ -10,7 +10,6 @@
         <aside
           class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0"
         >
-          <h2 class="text-lg font-semibold mb-4">Navigation</h2>
           <ul class="space-y-2">
             <li>
               <a

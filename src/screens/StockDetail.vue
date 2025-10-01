@@ -29,48 +29,71 @@
             </p>
           </div>
         </div>
-        <div>
-          <p><strong>Industry:</strong> {{ stockData.finnhubIndustry }}</p>
-          <p>
-            <strong>Market Cap:</strong> ${{
-              stockData.marketCapitalization.toLocaleString()
-            }}M
-          </p>
-          <p>
-            <strong>Shares Outstanding:</strong>
-            {{ stockData.shareOutstanding.toLocaleString() }}
-          </p>
-          <p><strong>IPO Date:</strong> {{ stockData.ipo }}</p>
-          <p><strong>Country:</strong> {{ stockData.country }}</p>
-          <p><strong>Currency:</strong> {{ stockData.currency }}</p>
-          <p><strong>Phone:</strong> {{ stockData.phone }}</p>
-          <p>
-            <strong>Website:</strong>
-            <a
-              :href="stockData.weburl"
-              target="_blank"
-              class="text-primary underline"
-              >{{ stockData.weburl }}</a
-            >
-          </p>
-        </div>
-        <div v-if="defaultAccount" class="mt-6">
-          <form
-            class="flex items-center space-x-4"
+        <div class="bg-neutral-50 rounded-lg p-6 shadow-md">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">Industry:</span>
+          <span class="text-gray-700">{{ stockData.finnhubIndustry }}</span>
+              </p>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">Market Cap:</span>
+          <span class="text-gray-700">${{ stockData.marketCapitalization.toLocaleString() }}M</span>
+              </p>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">Shares Outstanding:</span>
+          <span class="text-gray-700">{{ stockData.shareOutstanding.toLocaleString() }}</span>
+              </p>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">IPO Date:</span>
+          <span class="text-gray-700">{{ stockData.ipo }}</span>
+              </p>
+            </div>
+            <div>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">Country:</span>
+          <span class="text-gray-700">{{ stockData.country }}</span>
+              </p>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">Currency:</span>
+          <span class="text-gray-700">{{ stockData.currency }}</span>
+              </p>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">Phone:</span>
+          <span class="text-gray-700">{{ stockData.phone }}</span>
+              </p>
+              <p class="mb-2">
+          <span class="font-semibold text-primary">Website:</span>
+          <a
+            :href="stockData.weburl"
+            target="_blank"
+            class="text-blue-600 underline hover:text-blue-800 transition"
+            >{{ stockData.weburl }}</a
           >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div v-if="defaultAccount" class="mt-8 flex justify-center">
+          <form>
             <button
               @click.prevent="openStockForm"
               type="button"
-              class="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700 transition"
+              class="px-6 py-2 bg-gradient-to-r from-primary to-blue-500 text-white font-semibold rounded-lg shadow hover:scale-105 hover:from-blue-600 hover:to-primary transition-all duration-200"
             >
-              Buy Stock
+              <span class="inline-flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m0 0l-4-4m4 4l4-4"></path>
+          </svg>
+          Buy Stock
+              </span>
             </button>
           </form>
         </div>
     
         <!-- Stock Quote -->
         <div v-if="stockQuote" class="mt-8">
-          <h3 class="text-xl font-bold mb-2">Stock Quote</h3>
+          <h3 class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl">Stock Quote</h3>
           <table class="w-full border">
             <thead>
               <tr>
@@ -107,7 +130,7 @@
         </div>
         <!-- Stock Recommendations -->
         <div v-if="stockRecommendations.length" class="mt-8">
-          <h3 class="text-xl font-bold mb-2">Stock Recommendations</h3>
+          <h3 class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl">Stock Recommendations</h3>
           <table class="w-full border">
             <thead>
               <tr>
@@ -133,7 +156,7 @@
         </div>
         <!-- Stock News -->
         <div v-if="stockNews.length" class="mt-8">
-          <h3 class="text-xl font-bold mb-2">Latest News</h3>
+          <h3 class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl">Latest News</h3>
           <ul class="space-y-2">
             <li
               v-for="news in stockNews"

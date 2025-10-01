@@ -5,8 +5,8 @@
       <p class="text-gray-600 mb-4 text-center">
         Find the stock symbol you're looking for.
       </p>
-      
-      <div class="mb-6">
+
+      <div class="mb-6 flex items-center space-x-2">
         <input
           v-model="search"
           type="text"
@@ -15,9 +15,33 @@
         />
         <button
           @click="refresh"
-          class="mt-2 bg-primary text-white px-4 py-2 rounded"
+          class="bg-primary text-white px-4 py-2 rounded flex items-center"
           :disabled="loading"
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="8"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
+            <line
+              x1="21"
+              y1="21"
+              x2="16.65"
+              y2="16.65"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
           Search
         </button>
       </div>
@@ -37,8 +61,38 @@
               </p>
               <button
                 @click="navigateToDetails(item.symbol)"
-                class="mt-2 bg-secondary text-white px-3 py-1 rounded"
+                class="mt-2 bg-secondary text-white px-3 py-1 rounded flex items-center"
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                  />
+                  <path
+                    d="M2 12c2-5 8-9 20 0"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                  />
+                </svg>
                 View Details
               </button>
             </div>
