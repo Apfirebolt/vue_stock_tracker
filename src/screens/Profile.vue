@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-info">
+  <div class="bg-info">
     <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
       <h1 class="text-4xl font-bold text-primary mb-4 text-center">Profile</h1>
       <div class="flex flex-col md:flex-row gap-8">
@@ -8,20 +8,6 @@
           class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0"
         >
           <h2 class="text-lg font-semibold mb-4">Profile Navigation</h2>
-          <ul class="space-y-2">
-            <li>
-              <a href="#" class="text-primary hover:underline">Personal Info</a>
-            </li>
-            <li>
-              <a href="#" class="text-primary hover:underline">Accounts</a>
-            </li>
-            <li>
-              <a href="#" class="text-primary hover:underline">Portfolio</a>
-            </li>
-            <li>
-              <a href="#" class="text-primary hover:underline">Settings</a>
-            </li>
-          </ul>
         </aside>
         <!-- Profile Details -->
         <section class="md:w-4/5 w-full grid grid-cols-1 md:grid-cols-1 gap-8">

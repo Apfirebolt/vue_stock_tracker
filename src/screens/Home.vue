@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-info flex items-center justify-center">
+  <div class="bg-info flex items-center justify-center">
     <div class="max-w-2xl bg-white shadow-lg rounded-lg p-8">
       <h1 class="text-4xl font-bold text-primary mb-4">
         Welcome to Stock Tracker
