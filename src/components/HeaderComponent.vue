@@ -88,6 +88,7 @@
 import { ref, watch, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "../stores/auth";
+// Only call useAccount, useLog, useStock inside setup or lifecycle hooks, not at top-level
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 
@@ -97,10 +98,12 @@ const router = useRouter();
 
 const authData = computed(() => auth.getAuthData);
 
-// if authData changes from some value to null, redirect to login page
 watch(authData, (newVal, oldVal) => {
   if (oldVal && !newVal) {
     router.push("/login");
+    // clear all stores (call stores inside the callback)
+  } else if (!oldVal && newVal) {
+    router.push("/dashboard");
   }
 });
 

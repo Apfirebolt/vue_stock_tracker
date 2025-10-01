@@ -12,8 +12,8 @@
         <!-- Profile Details -->
         <section class="md:w-4/5 w-full grid grid-cols-1 md:grid-cols-1 gap-8">
           <!-- User Info Widget -->
-          <div class="bg-white rounded-lg shadow p-6 mb-8">
-            <h3 class="text-xl font-semibold mb-2">User Information</h3>
+          <div class="bg-white rounded-lg shadow p-6 mb-2">
+            <h3 class="text-2xl font-semibold mb-2 bg-light shadow-md p-2">User Information</h3>
             <div v-if="authData">
               <p class="font-bold text-primary mb-2">
                 {{ authData.firstName }}
@@ -25,7 +25,7 @@
           </div>
           <!-- Edit Profile Form -->
           <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+            <h3 class="text-2xl font-semibold mb-2 bg-light shadow-md p-2">Edit Profile</h3>
             <form @submit.prevent="updateProfile">
               <div class="mb-4 flex flex-col md:flex-row gap-4">
                 <div class="w-full md:w-1/2">
@@ -70,12 +70,15 @@
               <div v-if="errorMessage" class="text-red-500 mb-2">
                 {{ errorMessage }}
               </div>
-              <button
+                <button
                 type="submit"
-                class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark"
-              >
+                class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark flex items-center gap-2"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
                 Save Changes
-              </button>
+                </button>
             </form>
           </div>
         </section>

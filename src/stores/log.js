@@ -40,5 +40,10 @@ export const useLog = defineStore("log", {
         this.loading = false;
       }
     },
+
+    resetLogData() {
+      this.logs = [];
+      this.loading = false;
+    },
   },
 });

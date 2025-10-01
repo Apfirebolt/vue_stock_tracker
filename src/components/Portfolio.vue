@@ -3,7 +3,7 @@
   <section class="md:w-4/5 w-full grid md:grid-cols-1 gap-8">
     <!-- Stocks List Widget -->
     <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-xl font-semibold mb-2">Stocks</h3>
+      <h3 class="text-2xl font-semibold mb-2 bg-light shadow-md p-2">Stocks</h3>
       <div v-if="stocks.length === 0" class="text-gray-500">
         No stocks available.
       </div>

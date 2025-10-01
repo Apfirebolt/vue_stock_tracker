@@ -4,8 +4,6 @@ import { httpClient } from "../plugins/interceptor";
 import { useAuth } from "./auth";
 import { toast } from "vue3-toastify";
 
-const auth = useAuth();
-
 export const useStock = defineStore("stock", {
   state: () => ({
     stock: ref({}),
@@ -28,6 +26,7 @@ export const useStock = defineStore("stock", {
   actions: {
     async buyStockAction(payload) {
       try {
+        const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
@@ -46,6 +45,7 @@ export const useStock = defineStore("stock", {
 
     async getStockAction(stockId) {
       try {
+        const auth = useAuth();
         const response = await httpClient.get("stocks/" + stockId);
         this.stock = response.data;
         return response.data;
@@ -57,6 +57,7 @@ export const useStock = defineStore("stock", {
 
     async getStocksAction(page = 1) {
       try {
+        const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };

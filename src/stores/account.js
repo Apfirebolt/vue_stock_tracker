@@ -4,8 +4,6 @@ import { httpClient } from "../plugins/interceptor";
 import { useAuth } from "./auth";
 import { toast } from 'vue3-toastify';
 
-const auth = useAuth();
-
 export const useAccount = defineStore("account", {
   state: () => ({
     account: ref({}),
@@ -28,6 +26,7 @@ export const useAccount = defineStore("account", {
   actions: {
     async addAccount(accountData) {
       try {
+        const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
@@ -43,6 +42,7 @@ export const useAccount = defineStore("account", {
 
     async getAccountAction(accountId) {
       try {
+        const auth = useAuth();
         const response = await httpClient.get("accounts/" + accountId);
         console.log(response);
       } catch (error) {
@@ -52,6 +52,7 @@ export const useAccount = defineStore("account", {
 
     async getAccountsAction(page = 1) {
       try {
+        const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
@@ -71,6 +72,7 @@ export const useAccount = defineStore("account", {
 
     async deleteAccount(accountId) {
       try {
+        const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
@@ -86,6 +88,7 @@ export const useAccount = defineStore("account", {
 
     async setAccountBalance(accountId, balanceData) {
       try {
+        const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
@@ -106,6 +109,7 @@ export const useAccount = defineStore("account", {
 
     async setDefaultAccount(accountId) {
       try {
+        const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };

@@ -6,6 +6,9 @@ import Cookie from "js-cookie";
 import { httpClient } from "../plugins/interceptor";
 import { toast } from 'vue3-toastify';
 import { toastOptions } from "../utils";
+import { useLog } from "./log";
+import { useAccount } from "./account";
+import { useStock } from "./stock";
 
 export const useAuth = defineStore("auth", {
   state: () => ({
@@ -120,9 +123,20 @@ export const useAuth = defineStore("auth", {
     },
 
     logout() {
+
+      // Initialize the account store
+      const accountStore = useAccount();
+      const logStore = useLog();
+      const stockStore = useStock();
+
       this.authData = null;
       toast.success("Logged out successfully!", toastOptions);
       Cookie.remove("user");
+      
+      // Call the reset action on the account store
+      accountStore.resetAccountData();
+      logStore.resetLogData();
+      stockStore.resetStockData();
     },
 
     resetSuccess() {
