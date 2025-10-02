@@ -43,7 +43,7 @@
           </ul>
         </aside>
         <!-- Dashboard Widgets -->
-        <section ref="containerRef" class="md:w-4/5 w-full grid md:grid-cols-1 gap-8">
+        <section ref="containerRef" class="w-full grid md:grid-cols-1 gap-8">
           <!-- Stocks List Widget -->
           <div>
             <h2 class="text-2xl font-semibold text-primary mb-4">Features Overview</h2>

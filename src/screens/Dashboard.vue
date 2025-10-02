@@ -50,7 +50,7 @@
           </ul>
         </aside>
         <!-- Dashboard Widgets -->
-        <section class="md:w-4/5 w-full grid md:grid-cols-1 gap-8">
+        <section class="w-full grid md:grid-cols-1 gap-8">
           <!-- Stocks List Widget -->
           <Portfolio
             v-if="stocks.length > 0 && selectedTab === 'portfolio'"
