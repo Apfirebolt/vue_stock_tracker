@@ -118,11 +118,11 @@ const showQuantityBlock = () => {
   showQuantity.value = !showQuantity.value;
 };
 
-const updateStockUtil = async (stockObj) => {
+const updateStockUtil = async (stock) => {
   const payload = {
     sell_price: currentPrice.value,
     quantity: quantityInput.value,
   };
-  await updateStock.value(stockObj._id, payload);
+  await updateStock.value(stock._id, payload);
 };
 </script>

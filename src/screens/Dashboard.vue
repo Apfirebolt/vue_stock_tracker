@@ -211,9 +211,8 @@ const changeSelectedTab = (tab) => {
 
 const updateStockUtil = async (stockId, stockData) => {
   try {
-    console.log('Stock data ', stockId, stockData)
-    // await stockStore.updateStockAction(stockId, stockData);
-    // await getStocks();
+    await stockStore.updateStockAction(stockId, stockData);
+    await getStocks();
   } catch (error) {
     console.error("Failed to update stock:", error);
   }

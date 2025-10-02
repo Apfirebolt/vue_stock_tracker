@@ -93,13 +93,8 @@ const calculateCurrentPrice = async (symbol) => {
   }
 };
 
-const updateStockUtil = async (stock) => {
-  const currentPrice = await calculateCurrentPrice(stock.symbol);
-  const payload = {
-    sell_price: currentPrice,
-    quantity: quantityInput.value
-  }
-  await updateStock.value(stock._id, payload);
+const updateStockUtil = async (stockId, stockData) => {
+  await updateStock.value(stockId, stockData);
 }
 
 onMounted(async () => {
