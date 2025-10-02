@@ -9,33 +9,51 @@
       </div>
       <div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow">
-                <span class="text-lg font-semibold">Total Stocks</span>
-                <span class="text-2xl">{{ stocks.length }}</span>
-            </div>
-            <div class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow">
-                <span class="text-lg font-semibold">Total Invested</span>
-                <span class="text-2xl">${{ totalInvested.toFixed(2) }}</span>
-            </div>
-            <div class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow">
-                <span class="text-lg font-semibold">Current Value</span>
-                <span class="text-2xl">${{ computedCurrentValue.toFixed(2) }}</span>
-            </div>
+          <div
+            class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow"
+          >
+            <span class="text-lg font-semibold">Total Stocks</span>
+            <span class="text-2xl">{{ stocks.length }}</span>
+          </div>
+          <div
+            class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow"
+          >
+            <span class="text-lg font-semibold">Total Invested</span>
+            <span class="text-2xl">${{ totalInvested.toFixed(2) }}</span>
+          </div>
+          <div
+            class="flex flex-col items-center bg-neutral-100 rounded-lg p-4 shadow"
+          >
+            <span class="text-lg font-semibold">Current Value</span>
+            <span class="text-2xl">${{ computedCurrentValue.toFixed(2) }}</span>
+          </div>
         </div>
         <ul v-if="stocks.length > 0" class="space-y-4">
           <li v-for="stock in stocks" :key="stock._id" class="border-b pb-2">
-            <StockCard :stock="stock" :updateStock="updateStockUtil" :currentPrice="getCurrentPrice(stock.symbol)" />
+            <StockCard
+              :stock="stock"
+              :updateStock="updateStockUtil"
+              :currentPrice="getCurrentPrice(stock.symbol)"
+            />
           </li>
         </ul>
       </div>
     </div>
   </section>
+  <Pagination
+    :currentPage="currentPage"
+    :total="total"
+    :perPage="5"
+    class="mt-4"
+    @update="updatePage"
+  />
 </template>
 
 <script setup>
-import { ref, onMounted, computed, toRefs } from "vue";
+import { ref, onMounted, computed, toRefs, watch } from "vue";
 import { axiosInstance } from "../plugins/interceptor";
-import StockCard from './StockCard.vue';
+import Pagination from "./Pagination.vue";
+import StockCard from "./StockCard.vue";
 
 const props = defineProps({
   stocks: {
@@ -46,19 +64,39 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  total: {
+    type: Number,
+    required: true,
+  },
+  lastPage: {
+    type: Number,
+    required: true,
+  },
+  getStocks: {
+    type: Function,
+    required: true,
+  },
 });
 
 const { stocks, updateStock } = toRefs(props);
 const errorMessage = ref("");
 const currentValue = ref(0);
+const currentPage = ref(1);
 const showQuantity = ref(false);
 const quantityInput = ref(0);
 const stockBuyAndCurrentValue = ref({});
 
 const totalInvested = computed(() =>
-  stocks.value.reduce((total, stock) => total + stock.buy_price * stock.quantity, 0)
+  stocks.value.reduce(
+    (total, stock) => total + stock.buy_price * stock.quantity,
+    0
+  )
 );
 const computedCurrentValue = computed(() => currentValue.value);
+
+watch(currentPage, (newPage) => {
+  props.getStocks(newPage);
+});
 
 // a computed property which returns the current price of the passed symbol
 const getCurrentPrice = (symbol) => {
@@ -67,7 +105,7 @@ const getCurrentPrice = (symbol) => {
 
 const showQuantityBlock = () => {
   showQuantity.value = !showQuantity.value;
-}
+};
 
 // method to go through each stock, check the current price and calculate the current value of invested amount
 const calculateCurrentValues = async () => {
@@ -95,7 +133,11 @@ const calculateCurrentPrice = async (symbol) => {
 
 const updateStockUtil = async (stockId, stockData) => {
   await updateStock.value(stockId, stockData);
-}
+};
+
+const updatePage = (page) => {
+  currentPage.value = page;
+};
 
 onMounted(async () => {
   await calculateCurrentValues();

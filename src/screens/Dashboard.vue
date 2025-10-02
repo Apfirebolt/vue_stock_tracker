@@ -8,6 +8,7 @@
       <div class="flex flex-col md:flex-row gap-8">
         <!-- Sidebar -->
         <aside
+          ref="sidebarRef"
           class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0"
         >
           <img :src="trackerSvg" alt="Tracker" class="w-48 h-48 mx-auto" />
@@ -54,7 +55,10 @@
           <Portfolio
             v-if="stocks.length > 0 && selectedTab === 'portfolio'"
             :stocks="stocks"
+            :total="stockTotal"
+            :lastPage="stockLastPage"
             :updateStock="updateStockUtil"
+            :getStocks="getStocks"
           />
           <!-- Market News Widget -->
           <AccountSection
@@ -141,12 +145,13 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { gsap } from "gsap";
 import { useAccount } from "../stores/account";
 import { useLog } from "../stores/log";
 import { useStock } from "../stores/stock";
 import { useAuth } from "../stores/auth";
 import { axiosInstance } from "../plugins/interceptor";
-import trackerSvg from "/public/tracker.svg";
+import trackerSvg from "../assets/tracker.svg";
 import {
   Dialog,
   DialogOverlay,
@@ -168,6 +173,7 @@ import AuditLog from "../components/AuditLog.vue";
 const isOpen = ref(false);
 const errorMessage = ref("");
 const currentValue = ref(0);
+const sidebarRef = ref(null);
 const stockBuyAndCurrentValue = ref({});
 const selectedTab = ref("portfolio");
 const stockStore = useStock();
@@ -177,7 +183,10 @@ const logStore = useLog();
 
 const authData = computed(() => authStore.authData);
 const accounts = computed(() => accountStore.accounts);
-const stocks = computed(() => stockStore.stocks);
+const stocks = computed(() => stockStore.getStocks);
+const stockTotal = computed(() => stockStore.getTotal);
+const stockItemsPerPage = computed(() => stockStore.getItemsPerPage);
+const stockLastPage = computed(() => stockStore.getLastPage);
 const logs = computed(() => logStore.getLogs);
 const total = computed(() => logStore.getTotal);
 const itemsPerPage = computed(() => logStore.getItemsPerPage);
@@ -225,9 +234,9 @@ const getAccounts = async () => {
   }
 };
 
-const getStocks = async () => {
+const getStocks = async (page = 1) => {
   try {
-    await stockStore.getStocksAction();
+    await stockStore.getStocksAction(page);
   } catch (error) {
     console.error("Failed to fetch stocks:", error);
   }
@@ -258,5 +267,15 @@ onMounted(async () => {
   await getAccounts();
   await getStocks();
   await getAuditLogs();
+
+  // GSAP animation for sidebar
+  if (sidebarRef.value) {
+    gsap.from(sidebarRef.value, {
+      duration: 2,
+      x: -100,
+      opacity: 0,
+      ease: "power2.out",
+    });
+  }
 });
 </script>
