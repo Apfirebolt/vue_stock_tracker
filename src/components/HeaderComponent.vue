@@ -88,7 +88,6 @@
 import { ref, watch, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "../stores/auth";
-// Only call useAccount, useLog, useStock inside setup or lifecycle hooks, not at top-level
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 

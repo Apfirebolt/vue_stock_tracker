@@ -24,54 +24,7 @@
         </div>
         <ul v-if="stocks.length > 0" class="space-y-4">
           <li v-for="stock in stocks" :key="stock._id" class="border-b pb-2">
-            <div class="flex flex-col bg-neutral-100">
-              <span
-                class="font-bold text-primary bg-neutral-200 shadow-md px-2 py-3 text-center mb-3"
-                >{{ stock.symbol }}</span
-              >
-              <div class="px-4 py-2 flex flex-col">
-                <span>Buy Price: ${{ stock.buy_price }}</span>
-                <span
-                  v-if="stockBuyAndCurrentValue[stock.symbol]"
-                  :class="
-                    stockBuyAndCurrentValue[stock.symbol].currentPrice >
-                    stockBuyAndCurrentValue[stock.symbol].buyPrice
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  "
-                >
-                  Current Price: ${{
-                    stockBuyAndCurrentValue[stock.symbol].currentPrice
-                  }}
-                </span>
-                <span>Quantity: {{ stock.quantity }}</span>
-                <span v-if="stock.comments" class="text-gray-500 text-sm"
-                  >Comments: {{ stock.comments }}</span
-                >
-              </div>
-              <div v-if="showQuantity" class="mt-2 mx-auto">
-                <input
-                  type="number"
-                  v-model.number="quantityInput"
-                  min="1"
-                  :max="stock.quantity"
-                  class="border rounded px-2 py-1 w-24 mr-2"
-                  placeholder="Quantity"
-                />
-                <button
-                  class="px-3 py-1 bg-success text-white rounded hover:bg-green-700 transition"
-                  @click="updateStockUtil(stock)"
-                >
-                  Confirm
-                </button>
-              </div>
-              <button
-                class="mt-3 px-4 py-2 bg-info text-white rounded w-28 mx-auto my-2 hover:bg-blue-900 transition"
-                @click="showQuantityBlock"
-              >
-                Sell Stock
-              </button>
-            </div>
+            <StockCard :stock="stock" :updateStock="updateStockUtil" :currentPrice="getCurrentPrice(stock.symbol)" />
           </li>
         </ul>
       </div>
@@ -82,6 +35,8 @@
 <script setup>
 import { ref, onMounted, computed, toRefs } from "vue";
 import { axiosInstance } from "../plugins/interceptor";
+import StockCard from './StockCard.vue';
+
 const props = defineProps({
   stocks: {
     type: Array,
@@ -104,6 +59,11 @@ const totalInvested = computed(() =>
   stocks.value.reduce((total, stock) => total + stock.buy_price * stock.quantity, 0)
 );
 const computedCurrentValue = computed(() => currentValue.value);
+
+// a computed property which returns the current price of the passed symbol
+const getCurrentPrice = (symbol) => {
+  return stockBuyAndCurrentValue.value[symbol]?.currentPrice || 0;
+};
 
 const showQuantityBlock = () => {
   showQuantity.value = !showQuantity.value;
