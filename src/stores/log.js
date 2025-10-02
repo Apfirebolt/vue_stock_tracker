@@ -6,12 +6,24 @@ import { useAuth } from "./auth";
 export const useLog = defineStore("log", {
   state: () => ({
     logs: ref([]),
+    total: ref(0),
+    itemsPerPage: ref(10),
+    lastPage: ref(1),
     loading: ref(false),
   }),
 
   getters: {
     getLogs() {
       return this.logs;
+    },
+    getTotal() {
+      return this.total;
+    },
+    getItemsPerPage() {
+      return this.itemsPerPage;
+    },
+    getLastPage() {
+      return this.lastPage;
     },
     isLoading() {
       return this.loading;
@@ -29,7 +41,13 @@ export const useLog = defineStore("log", {
         const response = await httpClient.get("logs?page=" + page, {
           headers,
         });
-        this.logs = response.data;
+        if (response.status === 200) {
+          console.log('Logs now fetched:', response.data.data);
+          this.logs = response.data.data;
+          this.total = response.data.total;
+          this.itemsPerPage = response.data.itemsPerPage;
+          this.lastPage = response.data.lastPage;
+        }
       } catch (error) {
         console.log("Some error occurred while fetching logs:", error);
         if (error.response && error.response.status === 401) {

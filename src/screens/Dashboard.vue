@@ -50,14 +50,45 @@
         <!-- Dashboard Widgets -->
         <section class="md:w-4/5 w-full grid md:grid-cols-1 gap-8">
           <!-- Stocks List Widget -->
-          <Portfolio v-if="stocks.length > 0 && selectedTab === 'portfolio'" :stocks="stocks" :updateStock="updateStockUtil" />
+          <Portfolio
+            v-if="stocks.length > 0 && selectedTab === 'portfolio'"
+            :stocks="stocks"
+            :updateStock="updateStockUtil"
+          />
           <!-- Market News Widget -->
-          <AccountSection v-if="accounts.length > 0 && selectedTab === 'accounts'"
+          <AccountSection
+            v-if="accounts.length > 0 && selectedTab === 'accounts'"
             :accounts="accounts"
             :setAccountBalance="setAccountBalanceUtil"
             :setAccountDefault="setAccountDefaultUtil"
           />
-          <AuditLog v-if="logs.length > 0 && selectedTab === 'logs'" :logs="logs" />
+          <AuditLog
+            v-if="logs.length > 0 && selectedTab === 'logs'"
+            :logs="logs"
+            :total="total"
+            :lastPage="lastPage"
+            :getAuditLogs="getAuditLogs"
+          />
+          <div
+            v-if="selectedTab === 'accounts' && accounts.length === 0"
+            class="text-center text-gray-500 py-8 shadow-emerald-50"
+          >
+            <p class="text-lg">
+              No accounts found. Please add an account to get started.
+            </p>
+          </div>
+          <div
+            v-if="selectedTab === 'portfolio' && stocks.length === 0"
+            class="text-center text-gray-500 py-8 shadow-emerald-50"
+          >
+            <p class="text-lg">No stocks found in your portfolio.</p>
+          </div>
+          <div
+            v-if="selectedTab === 'logs' && logs.length === 0"
+            class="text-center text-gray-500 py-8 shadow-emerald-50"
+          >
+            <p class="text-lg">No logs found.</p>
+          </div>
         </section>
       </div>
     </div>
@@ -145,7 +176,10 @@ const logStore = useLog();
 const authData = computed(() => authStore.authData);
 const accounts = computed(() => accountStore.accounts);
 const stocks = computed(() => stockStore.stocks);
-const logs = computed(() => logStore.logs);
+const logs = computed(() => logStore.getLogs);
+const total = computed(() => logStore.getTotal);
+const itemsPerPage = computed(() => logStore.getItemsPerPage);
+const lastPage = computed(() => logStore.getLastPage);
 
 function closeModal() {
   isOpen.value = false;
@@ -175,7 +209,7 @@ const setAccountBalanceUtil = async (account, balance) => {
 const setAccountDefaultUtil = async (account) => {
   try {
     await accountStore.setDefaultAccount(account._id);
-    await getAccounts();  
+    await getAccounts();
   } catch (error) {
     console.error("Failed to set default account:", error);
   }
@@ -197,9 +231,9 @@ const getStocks = async () => {
   }
 };
 
-const getAuditLogs = async () => {
+const getAuditLogs = async (page = 1) => {
   try {
-    await logStore.getLogsAction();
+    await logStore.getLogsAction(page);
   } catch (error) {
     console.error("Failed to fetch audit logs:", error);
   }

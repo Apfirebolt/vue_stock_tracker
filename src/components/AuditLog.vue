@@ -14,16 +14,47 @@
         </div>
       </li>
     </ul>
+    <Pagination
+      :currentPage="currentPage"
+      :total="total"
+      :perPage="5"
+      class="mt-4"
+      @update="updatePage"
+    />
   </div>
 </template>
 
 <script setup>
+import Pagination from "./Pagination.vue";
+import { ref, watch } from "vue";
 const props = defineProps({
   logs: {
     type: Array,
     required: true,
   },
+  total: {
+    type: Number,
+    required: true,
+  },
+  lastPage: {
+    type: Number,
+    required: true,
+  },
+  getAuditLogs: {
+    type: Function,
+    required: true,
+  },
 });
 
 const { logs } = props;
+const currentPage = ref(1);
+
+watch(currentPage, (newPage) => {
+  props.getAuditLogs(newPage);
+});
+
+const updatePage = (page) => {
+  currentPage.value = page;
+};
+
 </script>
