@@ -50,7 +50,7 @@
         <!-- Dashboard Widgets -->
         <section class="md:w-4/5 w-full grid md:grid-cols-1 gap-8">
           <!-- Stocks List Widget -->
-          <Portfolio v-if="stocks.length > 0 && selectedTab === 'portfolio'" :stocks="stocks" />
+          <Portfolio v-if="stocks.length > 0 && selectedTab === 'portfolio'" :stocks="stocks" :updateStock="updateStockUtil" />
           <!-- Market News Widget -->
           <AccountSection v-if="accounts.length > 0 && selectedTab === 'accounts'"
             :accounts="accounts"
@@ -207,6 +207,16 @@ const getAuditLogs = async () => {
 
 const changeSelectedTab = (tab) => {
   selectedTab.value = tab;
+};
+
+const updateStockUtil = async (stockId, stockData) => {
+  try {
+    console.log('Stock data ', stockId, stockData)
+    // await stockStore.updateStockAction(stockId, stockData);
+    // await getStocks();
+  } catch (error) {
+    console.error("Failed to update stock:", error);
+  }
 };
 
 onMounted(async () => {

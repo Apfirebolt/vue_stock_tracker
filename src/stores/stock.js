@@ -75,6 +75,25 @@ export const useStock = defineStore("stock", {
       }
     },
 
+    async updateStockAction(stockId, stockData) {
+      try {
+        const auth = useAuth();
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const response = await httpClient.put("stocks/" + stockId, stockData, {
+          headers,
+        });
+        if (response.status === 200) {
+          toast.success("Stock updated!");
+        }
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
     resetStockData() {
       this.stock = {};
       this.stocks = [];
