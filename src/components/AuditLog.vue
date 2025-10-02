@@ -14,6 +14,7 @@
         </div>
       </li>
     </ul>
+  
     <Pagination
       :currentPage="currentPage"
       :total="total"
@@ -46,7 +47,6 @@ const props = defineProps({
   },
 });
 
-const { logs } = props;
 const currentPage = ref(1);
 
 watch(currentPage, (newPage) => {

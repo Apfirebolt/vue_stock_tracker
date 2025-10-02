@@ -10,6 +10,7 @@
         <aside
           class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0"
         >
+          <img :src="trackerSvg" alt="Tracker" class="w-48 h-48 mx-auto" />
           <ul class="space-y-2">
             <li>
               <a
@@ -145,6 +146,7 @@ import { useLog } from "../stores/log";
 import { useStock } from "../stores/stock";
 import { useAuth } from "../stores/auth";
 import { axiosInstance } from "../plugins/interceptor";
+import trackerSvg from "/public/tracker.svg";
 import {
   Dialog,
   DialogOverlay,

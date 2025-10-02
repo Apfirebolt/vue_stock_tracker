@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-screen bg-info flex items-center justify-center">
     <div class="bg-white shadow-lg rounded-lg py-8 px-6 w-full max-w-md">
+      <img :src="trackerSvg" alt="Tracker" class="w-36 h-36 mx-auto" />
       <h1
         class="text-3xl font-bold text-white mb-6 bg-gradient-to-r from-blue-500 to-teal-500 text-center py-2 rounded flex items-center justify-center gap-2"
       >
@@ -102,6 +103,7 @@ import { ref } from "vue";
 import { httpClient } from "../plugins/interceptor";
 import { computed } from "vue";
 import { useAuth } from "../stores/auth";
+import trackerSvg from "/public/tracker.svg";
 
 // FontAwesome imports
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
