@@ -24,32 +24,7 @@
         </div>
         <ul v-if="stocks.length > 0" class="space-y-4">
           <li v-for="stock in stocks" :key="stock._id" class="border-b pb-2">
-            <div class="flex flex-col bg-neutral-100">
-              <span
-                class="font-bold text-primary bg-neutral-200 shadow-md px-2 py-3 text-center mb-3"
-                >{{ stock.symbol }}</span
-              >
-              <div class="px-4 py-2 flex flex-col">
-                <span>Buy Price: ${{ stock.buy_price }}</span>
-                <span
-                  v-if="stockBuyAndCurrentValue[stock.symbol]"
-                  :class="
-                    stockBuyAndCurrentValue[stock.symbol].currentPrice >
-                    stockBuyAndCurrentValue[stock.symbol].buyPrice
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  "
-                >
-                  Current Price: ${{
-                    stockBuyAndCurrentValue[stock.symbol].currentPrice
-                  }}
-                </span>
-                <span>Quantity: {{ stock.quantity }}</span>
-                <span v-if="stock.comments" class="text-gray-500 text-sm"
-                  >Comments: {{ stock.comments }}</span
-                >
-              </div>
-            </div>
+            <StockCard :stock="stock" :updateStock="updateStockUtil" :currentPrice="getCurrentPrice(stock.symbol)" />
           </li>
         </ul>
       </div>
@@ -58,28 +33,45 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, toRefs } from "vue";
 import { axiosInstance } from "../plugins/interceptor";
+import StockCard from './StockCard.vue';
+
 const props = defineProps({
   stocks: {
     type: Array,
     required: true,
   },
+  updateStock: {
+    type: Function,
+    required: true,
+  },
 });
 
-const stocks = props.stocks;
+const { stocks, updateStock } = toRefs(props);
 const errorMessage = ref("");
 const currentValue = ref(0);
+const showQuantity = ref(false);
+const quantityInput = ref(0);
 const stockBuyAndCurrentValue = ref({});
 
 const totalInvested = computed(() =>
-  stocks.reduce((total, stock) => total + stock.buy_price * stock.quantity, 0)
+  stocks.value.reduce((total, stock) => total + stock.buy_price * stock.quantity, 0)
 );
 const computedCurrentValue = computed(() => currentValue.value);
 
+// a computed property which returns the current price of the passed symbol
+const getCurrentPrice = (symbol) => {
+  return stockBuyAndCurrentValue.value[symbol]?.currentPrice || 0;
+};
+
+const showQuantityBlock = () => {
+  showQuantity.value = !showQuantity.value;
+}
+
 // method to go through each stock, check the current price and calculate the current value of invested amount
 const calculateCurrentValues = async () => {
-  for (const stock of stocks) {
+  for (const stock of stocks.value) {
     const currentPrice = await calculateCurrentPrice(stock.symbol);
     if (currentPrice) {
       currentValue.value += currentPrice * stock.quantity;
@@ -100,6 +92,10 @@ const calculateCurrentPrice = async (symbol) => {
     return null;
   }
 };
+
+const updateStockUtil = async (stockId, stockData) => {
+  await updateStock.value(stockId, stockData);
+}
 
 onMounted(async () => {
   await calculateCurrentValues();

@@ -7,7 +7,10 @@
         <aside
           class="md:w-1/5 w-full bg-white rounded-lg shadow p-6 mb-8 md:mb-0"
         >
-          <h2 class="text-lg font-semibold mb-4">Profile Navigation</h2>
+          <p class="text-primary text-lg font-semibold mb-2">
+            Here you can view and edit your profile information. Use the form
+            below to update your details.
+          </p>
         </aside>
         <!-- Profile Details -->
         <section class="md:w-4/5 w-full grid grid-cols-1 md:grid-cols-1 gap-8">
@@ -81,6 +84,56 @@
                 </button>
             </form>
           </div>
+
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-2xl font-semibold mb-2 bg-light shadow-md p-2">Change Password</h3>
+            <form @submit.prevent="changePassword">
+              <div class="mb-4 flex flex-col md:flex-row gap-4">
+                <div class="w-full md:w-1/3">
+                  <label class="block text-gray-700 mb-1" for="oldPassword">Old Password</label>
+                  <input
+                    id="oldPassword"
+                    v-model="passwordForm.oldPassword"
+                    type="password"
+                    class="w-full border rounded px-3 py-2"
+                    required
+                  />
+                </div>
+                <div class="w-full md:w-1/3">
+                  <label class="block text-gray-700 mb-1" for="newPassword">New Password</label>
+                  <input
+                    id="newPassword"
+                    v-model="passwordForm.newPassword"
+                    type="password"
+                    class="w-full border rounded px-3 py-2"
+                    required
+                  />
+                </div>
+                <div class="w-full md:w-1/3">
+                  <label class="block text-gray-700 mb-1" for="confirmNewPassword">Confirm New Password</label>
+                  <input
+                    id="confirmNewPassword"
+                    v-model="passwordForm.confirmNewPassword"
+                    type="password"
+                    class="w-full border rounded px-3 py-2"
+                    required
+                  />
+                </div>
+              </div>
+              <div v-if="errorMessage" class="text-red-500 mb-2">
+                {{ errorMessage }}
+              </div>
+              <button
+                type="submit"
+                class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Change Password
+              </button>
+            </form>
+          </div>
         </section>
       </div>
     </div>
@@ -107,6 +160,12 @@ const form = ref({
   lastName: "",
   username: "",
   email: "",
+});
+
+const passwordForm = ref({
+  oldPassword: "",
+  newPassword: "",
+  confirmNewPassword: "",
 });
 
 const authData = computed(() => authStore.authData);
