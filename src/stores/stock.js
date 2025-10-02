@@ -8,6 +8,9 @@ export const useStock = defineStore("stock", {
   state: () => ({
     stock: ref({}),
     stocks: ref([]),
+    total: ref(0),
+    itemsPerPage: ref(5),
+    lastPage: ref(1),
     loading: ref(false),
   }),
 
@@ -17,6 +20,15 @@ export const useStock = defineStore("stock", {
     },
     getStocks() {
       return this.stocks;
+    },
+    getTotal() {
+      return this.total;
+    },
+    getItemsPerPage() {
+      return this.itemsPerPage;
+    },
+    getLastPage() {
+      return this.lastPage;
     },
     isLoading() {
       return this.loading;
@@ -43,18 +55,6 @@ export const useStock = defineStore("stock", {
       }
     },
 
-    async getStockAction(stockId) {
-      try {
-        const auth = useAuth();
-        const response = await httpClient.get("stocks/" + stockId);
-        this.stock = response.data;
-        return response.data;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    },
-
     async getStocksAction(page = 1) {
       try {
         const auth = useAuth();
@@ -64,8 +64,12 @@ export const useStock = defineStore("stock", {
         const response = await httpClient.get("stocks?page=" + page, {
           headers,
         });
-        this.stocks = response.data;
-        return response.data;
+        if (response.status === 200) {
+          this.stocks = response.data.data;
+          this.total = response.data.total;
+          this.itemsPerPage = response.data.itemsPerPage;
+          this.lastPage = response.data.lastPage;
+        }
       } catch (error) {
         console.log("Some error occurred while fetching stocks:", error);
         if (error.response && error.response.status === 401) {

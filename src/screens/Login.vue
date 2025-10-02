@@ -68,7 +68,7 @@
 import { ref, computed } from "vue";
 import { httpClient } from "../plugins/interceptor";
 import { useAuth } from "../stores/auth";
-import trackerSvg from "/public/tracker.svg";
+import trackerSvg from "../assets/tracker.svg";
 
 // FontAwesome imports
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
