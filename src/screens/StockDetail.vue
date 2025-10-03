@@ -33,67 +33,111 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p class="mb-2">
-          <span class="font-semibold text-primary">Industry:</span>
-          <span class="text-gray-700">{{ stockData.finnhubIndustry }}</span>
+                <span class="font-semibold text-primary">Industry:</span>
+                <span class="text-gray-700">{{
+                  stockData.finnhubIndustry
+                }}</span>
               </p>
               <p class="mb-2">
-          <span class="font-semibold text-primary">Market Cap:</span>
-          <span class="text-gray-700">${{ stockData.marketCapitalization.toLocaleString() }}M</span>
+                <span class="font-semibold text-primary">Market Cap:</span>
+                <span class="text-gray-700"
+                  >${{ stockData.marketCapitalization.toLocaleString() }}M</span
+                >
               </p>
               <p class="mb-2">
-          <span class="font-semibold text-primary">Shares Outstanding:</span>
-          <span class="text-gray-700">{{ stockData.shareOutstanding.toLocaleString() }}</span>
+                <span class="font-semibold text-primary"
+                  >Shares Outstanding:</span
+                >
+                <span class="text-gray-700">{{
+                  stockData.shareOutstanding.toLocaleString()
+                }}</span>
               </p>
               <p class="mb-2">
-          <span class="font-semibold text-primary">IPO Date:</span>
-          <span class="text-gray-700">{{ stockData.ipo }}</span>
+                <span class="font-semibold text-primary">IPO Date:</span>
+                <span class="text-gray-700">{{ stockData.ipo }}</span>
               </p>
             </div>
             <div>
               <p class="mb-2">
-          <span class="font-semibold text-primary">Country:</span>
-          <span class="text-gray-700">{{ stockData.country }}</span>
+                <span class="font-semibold text-primary">Country:</span>
+                <span class="text-gray-700">{{ stockData.country }}</span>
               </p>
               <p class="mb-2">
-          <span class="font-semibold text-primary">Currency:</span>
-          <span class="text-gray-700">{{ stockData.currency }}</span>
+                <span class="font-semibold text-primary">Currency:</span>
+                <span class="text-gray-700">{{ stockData.currency }}</span>
               </p>
               <p class="mb-2">
-          <span class="font-semibold text-primary">Phone:</span>
-          <span class="text-gray-700">{{ stockData.phone }}</span>
+                <span class="font-semibold text-primary">Phone:</span>
+                <span class="text-gray-700">{{ stockData.phone }}</span>
               </p>
               <p class="mb-2">
-          <span class="font-semibold text-primary">Website:</span>
-          <a
-            :href="stockData.weburl"
-            target="_blank"
-            class="text-blue-600 underline hover:text-blue-800 transition"
-            >{{ stockData.weburl }}</a
-          >
+                <span class="font-semibold text-primary">Website:</span>
+                <a
+                  :href="stockData.weburl"
+                  target="_blank"
+                  class="text-blue-600 underline hover:text-blue-800 transition"
+                  >{{ stockData.weburl }}</a
+                >
               </p>
             </div>
           </div>
         </div>
         <div v-if="defaultAccount" class="mt-8 flex justify-center">
-          <form>
+          <div>
             <button
               @click.prevent="openStockForm"
               type="button"
               class="px-6 py-2 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg shadow hover:scale-105 hover:from-blue-600 hover:to-primary transition-all duration-200"
             >
               <span class="inline-flex items-center">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m0 0l-4-4m4 4l4-4"></path>
-          </svg>
-          Buy Stock
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 8v8m0 0l-4-4m4 4l4-4"
+                  ></path>
+                </svg>
+                Buy Stock
               </span>
             </button>
-          </form>
+            <button
+              @click.prevent="openWatchListSelectForm"
+              type="button"
+              class="ml-4 px-6 py-2 bg-gradient-to-r from-secondary to-primary text-white font-semibold rounded-lg shadow hover:scale-105 hover:from-blue-600 hover:to-secondary transition-all duration-200"
+            >
+              <span class="inline-flex items-center">
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
+                Add to Watchlist
+              </span>
+            </button>
+          </div>
         </div>
-    
+
         <!-- Stock Quote -->
         <div v-if="stockQuote" class="mt-8">
-          <h3 class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl">Stock Quote</h3>
+          <h3
+            class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl"
+          >
+            Stock Quote
+          </h3>
           <table class="w-full border">
             <thead>
               <tr>
@@ -115,22 +159,33 @@
                 <td class="border px-2 py-1">{{ stockQuote.pc }}</td>
                 <td
                   class="border px-2 py-1"
-                  :class="{ 'text-green-600': stockQuote.d >= 0, 'text-red-600': stockQuote.d < 0 }"
+                  :class="{
+                    'text-green-600': stockQuote.d >= 0,
+                    'text-red-600': stockQuote.d < 0,
+                  }"
                 >
                   {{ stockQuote.d }}
                 </td>
                 <td
                   class="border px-2 py-1"
-                  :class="{ 'text-green-600': stockQuote.dp >= 0, 'text-red-600': stockQuote.dp < 0 }"
+                  :class="{
+                    'text-green-600': stockQuote.dp >= 0,
+                    'text-red-600': stockQuote.dp < 0,
+                  }"
                 >
-                  {{ stockQuote.dp }}% </td>
-                </tr>
+                  {{ stockQuote.dp }}%
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
         <!-- Stock Recommendations -->
         <div v-if="stockRecommendations.length" class="mt-8">
-          <h3 class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl">Stock Recommendations</h3>
+          <h3
+            class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl"
+          >
+            Stock Recommendations
+          </h3>
           <table class="w-full border">
             <thead>
               <tr>
@@ -156,7 +211,11 @@
         </div>
         <!-- Stock News -->
         <div v-if="stockNews.length" class="mt-8">
-          <h3 class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl">Latest News</h3>
+          <h3
+            class="text-primary bg-neutral-200 shadow-md p-2 text-center mb-3 text-xl"
+          >
+            Latest News
+          </h3>
           <ul class="space-y-2">
             <li
               v-for="news in stockNews"
@@ -189,28 +248,95 @@
       <div v-else class="text-gray-500">No data available.</div>
     </div>
     <TransitionRoot appear :show="isStockFormOpen" as="template">
-        <Dialog as="div" @close="closeStockForm" class="relative z-10">
-          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
-            leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-            <div class="fixed inset-0 bg-black/25" />
-          </TransitionChild>
+      <Dialog as="div" @close="closeStockForm" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
 
-          <div class="fixed inset-0 overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4 text-center">
-              <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
-                enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
-                leave-to="opacity-0 scale-95">
-                <DialogPanel
-                  class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div class="mt-2">
-                    <StockForm @add-stock-action="buyStockUtil" @close-modal="closeStockForm" :errorMessage="errorMessage" :stock="stockData" :defaultAccount="defaultAccount" :stockQuote="stockQuote" />
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <div class="mt-2">
+                  <StockForm
+                    @add-stock-action="buyStockUtil"
+                    @close-modal="closeStockForm"
+                    :errorMessage="errorMessage"
+                    :stock="stockData"
+                    :defaultAccount="defaultAccount"
+                    :stockQuote="stockQuote"
+                  />
+                </div>
+              </DialogPanel>
+            </TransitionChild>
           </div>
-        </Dialog>
-      </TransitionRoot>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
+    <TransitionRoot appear :show="isWatchListSelectFormOpen" as="template">
+      <Dialog as="div" @close="closeWatchListSelectForm" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <div class="mt-2">
+                  <WatchList
+                    @close-modal="closeWatchListSelectForm"
+                    @update-watchlist-action="updateWatchListUtil"
+                    :watchlists="watchlists"
+                  />
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -219,9 +345,11 @@ import { ref, onMounted, computed } from "vue";
 import { useAuth } from "../stores/auth";
 import { useAccount } from "../stores/account";
 import { useStock } from "../stores/stock";
+import { useWatchlist } from "../stores/watchlist";
 import { useRoute } from "vue-router";
 import { axiosInstance } from "../plugins/interceptor";
 import StockForm from "../components/StockForm.vue";
+import WatchList from "../components/WatchList.vue";
 import {
   Dialog,
   DialogOverlay,
@@ -232,8 +360,8 @@ import {
   TransitionChild,
   TransitionRoot,
   DialogTitle,
-  DialogPanel
-} from '@headlessui/vue'
+  DialogPanel,
+} from "@headlessui/vue";
 
 const route = useRoute();
 const loading = ref(false);
@@ -246,10 +374,13 @@ const search = ref("");
 const authStore = useAuth();
 const accountStore = useAccount();
 const stockStore = useStock();
+const watchlistStore = useWatchlist();
 const isStockFormOpen = ref(false);
+const isWatchListSelectFormOpen = ref(false);
 
 const authData = computed(() => authStore.authData);
 const accounts = computed(() => accountStore.accounts);
+const watchlists = computed(() => watchlistStore.getWatchlist);
 const defaultAccount = computed(() =>
   accounts.value.find((acc) => acc.isDefault)
 );
@@ -259,6 +390,13 @@ const closeStockForm = () => {
 };
 const openStockForm = () => {
   isStockFormOpen.value = true;
+};
+
+const closeWatchListSelectForm = () => {
+  isWatchListSelectFormOpen.value = false;
+};
+const openWatchListSelectForm = () => {
+  isWatchListSelectFormOpen.value = true;
 };
 
 async function fetchData() {
@@ -302,9 +440,7 @@ async function fetchQuote() {
   loading.value = true;
   error.value = null;
   try {
-    const response = await axiosInstance.get(
-      `/quote?symbol=${search.value}`
-    );
+    const response = await axiosInstance.get(`/quote?symbol=${search.value}`);
     stockQuote.value = response.data;
   } catch (err) {
     error.value = "Failed to fetch quote";
@@ -337,14 +473,16 @@ const buyStockUtil = async (formData) => {
       buy_price: stockQuote.value.c,
       quantity: Number(formData.quantity),
       account: defaultAccount.value._id,
-      comments: formData.comments || ""
-    }
+      comments: formData.comments || "",
+    };
     console.log("Buying stock with payload:", payload);
     await stockStore.buyStockAction(payload);
     closeStockForm();
     // refresh accounts to reflect new balance
     await accountStore.getAccountsAction();
-    alert(`Successfully bought ${payload.quantity} shares of ${payload.symbol}`);
+    alert(
+      `Successfully bought ${payload.quantity} shares of ${payload.symbol}`
+    );
   } catch (error) {
     console.error("Failed to buy stock:", error);
     alert("Failed to buy stock: " + (error.message || "Unknown error"));
@@ -360,6 +498,28 @@ function refresh() {
   }, 1000);
   fetchRecommendations();
 }
+
+const getWatchLists = async () => {
+  try {
+    if (watchlists.value.length === 0) {
+      await watchlistStore.getWatchlistsAction(1);
+    }
+  } catch (error) {
+    console.error("Failed to fetch watchlists:", error);
+  }
+};
+
+const updateWatchListUtil = async (watchlistId, stockId) => {
+  try {
+    await watchlistStore.updateWatchlistAction(watchlistId, {
+      stocks: [stockId],
+    });
+    closeWatchListSelectForm();
+  } catch (error) {
+    console.error("Failed to update watchlist:", error);
+    alert("Failed to add stock to watchlist: " + (error.message || "Unknown error"));
+  }
+};
 
 onMounted(() => {
   const symbol = route.params.symbol;
