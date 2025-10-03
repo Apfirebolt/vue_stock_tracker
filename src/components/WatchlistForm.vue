@@ -37,14 +37,7 @@ const form = reactive({
 });
 
 function submitForm() {
-  if (!form.name) {
-    alert("Please enter a watchlist name.");
-    return;
-  }
-  if (form.name.length > 50) {
-    alert("Watchlist name cannot exceed 50 characters.");
-    return;
-  }
+  console.log("Submitting form with data:", form);  
   emits("add-watchlist-action", { ...form });
 }
 </script>
