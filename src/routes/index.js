@@ -56,6 +56,11 @@ const routes = [
         component: () => import('../screens/StockDetail.vue')
     },
     {
+        path: '/watchlist',
+        name: 'WatchList',
+        component: () => import('../screens/WatchList.vue')
+    },
+    {
         path: '/country',
         name: 'Country',
         component: () => import('../screens/Country.vue')
