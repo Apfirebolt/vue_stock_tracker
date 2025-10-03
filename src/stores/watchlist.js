@@ -79,7 +79,7 @@ export const useWatchlist = defineStore("watchlist", {
       }
     },
 
-    async updateWatchlistItemAction(itemId, itemData) {
+    async updateWatchlistAction(itemId, itemData) {
       try {
         const auth = useAuth();
         const headers = {
@@ -98,7 +98,7 @@ export const useWatchlist = defineStore("watchlist", {
       }
     },
 
-    async deleteWatchlistItemAction(itemId) {
+    async deleteWatchlistAction(itemId) {
       try {
         const auth = useAuth();
         const headers = {

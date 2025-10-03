@@ -7,9 +7,23 @@
       <div class="flex justify-center mb-6">
         <button
           @click="openWatchlistForm"
-          class="bg-secondary text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition"
+          class="bg-secondary text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition flex items-center space-x-2"
         >
-          Create New Watchlist
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          <span>Create New Watchlist</span>
         </button>
       </div>
       <div v-if="error" class="text-red-500 text-center mb-4">{{ error }}</div>
@@ -39,7 +53,7 @@
                 >
                 <div class="flex space-x-2 my-2">
                   <button
-                    @click="openWatchlistForm"
+                    @click="openEditWatchlistForm(watchlist)"
                     class="text-primary hover:text-blue-700"
                     title="Edit"
                   >
@@ -59,7 +73,7 @@
                     </svg>
                   </button>
                   <button
-                    @click="watchlistStore.deleteWatchlistAction(watchlist._id)"
+                    @click="deleteWatchlistUtil(watchlist._id)"
                     class="text-danger hover:text-red-700"
                     title="Delete"
                   >
@@ -129,7 +143,9 @@
                 <div class="mt-2">
                   <WatchlistForm
                     @add-watchlist-action="addWatchListUtil"
+                    @update-watchlist-action="updateWatchlistUtil"
                     @close-modal="closeWatchlistForm"
+                    :watchlist="selectedWatchlist"
                   />
                 </div>
               </DialogPanel>
@@ -168,6 +184,7 @@ const error = ref(null);
 const search = ref("");
 const currentPage = ref(1);
 const totalPages = ref(1);
+const selectedWatchlist = ref(null);
 const authStore = useAuth();
 const watchlistStore = useWatchlist();
 const watchlists = computed(() => watchlistStore.getWatchlist);
@@ -190,6 +207,7 @@ const closeWatchlistForm = () => {
   isWatchlistFormOpen.value = false;
 };
 const openWatchlistForm = () => {
+  selectedWatchlist.value = null;
   isWatchlistFormOpen.value = true;
 };
 
@@ -210,6 +228,31 @@ const getWatchlists = async (page = 1) => {
   } catch (error) {
     console.error("Failed to fetch watchlists:", error);
   }
+};
+
+const deleteWatchlistUtil = async (watchlistId) => {
+  try {
+    await watchlistStore.deleteWatchlistAction(watchlistId);
+    await getWatchlists();
+  } catch (error) {
+    console.error("Failed to delete watchlist:", error);
+  }
+};
+
+const updateWatchlistUtil = async (watchlistId, watchlistData) => {
+  try {
+    await watchlistStore.updateWatchlistAction(watchlistId, watchlistData);
+    error.value = "";
+    closeWatchlistForm();
+    await getWatchlists();
+  } catch (error) {
+    error.value = error.message || "Failed to update watchlist.";
+  }
+};
+
+const openEditWatchlistForm = (watchlist) => {
+  selectedWatchlist.value = watchlist;
+  isWatchlistFormOpen.value = true;
 };
 
 onMounted(async () => {

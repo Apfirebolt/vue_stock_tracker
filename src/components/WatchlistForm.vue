@@ -20,24 +20,45 @@
     </div>
     <button
       type="submit"
-      class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition"
+      class="bg-secondary text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition"
     >
-      Create Watchlist
+      {{ watchlist ? "Update Watchlist" : "Create Watchlist" }}
     </button>
   </form>
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
+const props = defineProps({
+  watchlist: {
+    type: Object,
+    required: false,
+    default: null,
+  },
+});
 
-const emits = defineEmits(["add-watchlist-action", "close-modal"]);
+const emits = defineEmits([
+  "add-watchlist-action",
+  "update-watchlist-action",
+  "close-modal",
+]);
 
 const form = reactive({
   name: "",
 });
 
 function submitForm() {
-  console.log("Submitting form with data:", form);  
-  emits("add-watchlist-action", { ...form });
+  if (props.watchlist) {
+    emits("update-watchlist-action", props.watchlist._id, { name: form.name });
+  } else {
+    emits("add-watchlist-action", { name: form.name });
+  }
+  emits("close-modal");
 }
+
+onMounted(() => {
+  if (props.watchlist) {
+    form.name = props.watchlist.name || "";
+  }
+});
 </script>
