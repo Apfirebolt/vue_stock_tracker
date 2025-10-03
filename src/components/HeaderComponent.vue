@@ -3,7 +3,7 @@
     :class="[
       'border-b-4 lg:py-2 fixed top-0 z-20 w-full transition-all duration-300',
       isScrolledDown
-        ? 'bg-dark dark:bg-slate-800'
+        ? 'bg-gradient-to-r from-primary to-secondary dark:bg-slate-800'
         : 'bg-secondary dark:bg-slate-700 dark:text-white',
     ]"
     as="nav"
@@ -29,14 +29,14 @@
                   <button
                     v-if="link.action"
                     @click="link.action"
-                    class="text-white hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 rounded-md font-medium"
+                    class="text-white border border-white rounded-lg hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 font-medium"
                   >
                     {{ link.name }}
                   </button>
                   <router-link
                     v-else
                     :to="link.href"
-                    class="text-white hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 rounded-md font-medium"
+                    class="text-white border border-white rounded-lg hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 font-medium"
                   >
                     {{ link.name }}
                   </router-link>
@@ -47,7 +47,7 @@
                   v-for="link in links"
                   :key="link.name"
                   :to="link.href"
-                  class="text-white hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 rounded-md font-medium"
+                  class="text-white border border-white rounded-lg hover:bg-primary transition-all duration-200 hover:text-white px-3 py-2 font-medium"
                 >
                   {{ link.name }}
                 </router-link>
@@ -92,7 +92,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 
 const isScrolledDown = ref(false);
-const auth = useAuth(); 
+const auth = useAuth();
 const router = useRouter();
 
 const authData = computed(() => auth.getAuthData);

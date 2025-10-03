@@ -1,10 +1,10 @@
 <template>
   <div class="bg-info">
     <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
-      <h1 class="text-4xl font-bold text-primary mb-4 text-center">
-        Watch List
-      </h1>
-      <div class="flex justify-center mb-6">
+      <div class="flex justify-center items-center mb-6">
+        <h1 class="text-4xl font-bold text-primary mr-2 text-center">
+          Watch List
+        </h1>
         <button
           @click="openWatchlistForm"
           class="bg-secondary text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition flex items-center space-x-2"
@@ -40,12 +40,14 @@
                 <span class="font-semibold text-lg text-primary">{{
                   watchlist.name
                 }}</span>
-                <span class="text-xs text-gray-400 ml-4">
-                  Created: {{ watchlist.created_at }}
-                </span>
-                <span class="text-xs text-gray-400 ml-2">
-                  Updated: {{ watchlist.updated_at }}
-                </span>
+                <div class="flex space-x-4 mt-1">
+                  <p class="text-xs text-primary rounded-2xl p-2 bg-neutral-200">
+                    Created: {{ formatDate(watchlist.created_at) }}
+                  </p>
+                  <p class="text-xs text-primary rounded-2xl p-2 bg-neutral-200">
+                    Updated: {{ formatDate(watchlist.updated_at) }}
+                  </p>
+                </div>
               </div>
               <div>
                 <span class="text-sm text-gray-500"
@@ -178,6 +180,7 @@
 </template>
 
 <script setup>
+import dayjs from "dayjs";
 import { ref, onMounted, computed, watch } from "vue";
 import { useAuth } from "../stores/auth";
 import { useWatchlist } from "../stores/watchlist";
@@ -219,6 +222,10 @@ const watchlistLastPage = computed(() => watchlistStore.getLastPage);
 watch(currentPage, (newPage) => {
   getWatchlists(newPage);
 });
+
+const formatDate = (dateStr) => {
+  return dayjs(dateStr).format("YYYY-MM-DD HH:mm:ss");
+};
 
 const navigateToDetail = (id) => {
   router.push({ name: "WatchListDetail", params: { id } });

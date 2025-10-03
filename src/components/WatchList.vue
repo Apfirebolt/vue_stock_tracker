@@ -16,8 +16,13 @@
           <span class="font-semibold text-lg">{{ watchlist.name }}</span>
         </label>
 
-        <div class="mt-2 text-sm text-gray-600">
-          Created At: {{ new Date(watchlist.created_at).toLocaleDateString() }}
+        <div class="mt-2 text-base text-gray-600">
+            <p>
+              Created At: {{ new Date(watchlist.created_at).toLocaleDateString() }}
+            </p>
+            <p>
+              Updated At: {{ new Date(watchlist.updated_at).toLocaleDateString() }}
+            </p>
         </div>
       </div>
 

@@ -152,13 +152,13 @@
             </thead>
             <tbody>
               <tr>
-                <td class="border px-2 py-1">{{ stockQuote.c }}</td>
-                <td class="border px-2 py-1">{{ stockQuote.h }}</td>
-                <td class="border px-2 py-1">{{ stockQuote.l }}</td>
-                <td class="border px-2 py-1">{{ stockQuote.o }}</td>
-                <td class="border px-2 py-1">{{ stockQuote.pc }}</td>
+                <td class="border px-2 py-1 text-center">{{ stockQuote.c }}</td>
+                <td class="border px-2 py-1 text-center">{{ stockQuote.h }}</td>
+                <td class="border px-2 py-1 text-center">{{ stockQuote.l }}</td>
+                <td class="border px-2 py-1 text-center">{{ stockQuote.o }}</td>
+                <td class="border px-2 py-1 text-center">{{ stockQuote.pc }}</td>
                 <td
-                  class="border px-2 py-1"
+                  class="border px-2 py-1 text-center"
                   :class="{
                     'text-green-600': stockQuote.d >= 0,
                     'text-red-600': stockQuote.d < 0,
@@ -167,7 +167,7 @@
                   {{ stockQuote.d }}
                 </td>
                 <td
-                  class="border px-2 py-1"
+                  class="border px-2 py-1 text-center"
                   :class="{
                     'text-green-600': stockQuote.dp >= 0,
                     'text-red-600': stockQuote.dp < 0,
@@ -186,28 +186,28 @@
           >
             Stock Recommendations
           </h3>
-          <table class="w-full border">
+            <table class="w-full border">
             <thead>
               <tr>
-                <th class="border px-2 py-1">Period</th>
-                <th class="border px-2 py-1">Buy</th>
-                <th class="border px-2 py-1">Hold</th>
-                <th class="border px-2 py-1">Sell</th>
-                <th class="border px-2 py-1">Strong Buy</th>
-                <th class="border px-2 py-1">Strong Sell</th>
+              <th class="border px-2 py-1 text-center">Period</th>
+              <th class="border px-2 py-1 text-center">Buy</th>
+              <th class="border px-2 py-1 text-center">Hold</th>
+              <th class="border px-2 py-1 text-center">Sell</th>
+              <th class="border px-2 py-1 text-center">Strong Buy</th>
+              <th class="border px-2 py-1 text-center">Strong Sell</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="rec in stockRecommendations" :key="rec.period">
-                <td class="border px-2 py-1">{{ rec.period }}</td>
-                <td class="border px-2 py-1">{{ rec.buy }}</td>
-                <td class="border px-2 py-1">{{ rec.hold }}</td>
-                <td class="border px-2 py-1">{{ rec.sell }}</td>
-                <td class="border px-2 py-1">{{ rec.strongBuy }}</td>
-                <td class="border px-2 py-1">{{ rec.strongSell }}</td>
+              <td class="border px-2 py-1 text-center">{{ rec.period }}</td>
+              <td class="border px-2 py-1 text-center">{{ rec.buy }}</td>
+              <td class="border px-2 py-1 text-center">{{ rec.hold }}</td>
+              <td class="border px-2 py-1 text-center">{{ rec.sell }}</td>
+              <td class="border px-2 py-1 text-center">{{ rec.strongBuy }}</td>
+              <td class="border px-2 py-1 text-center">{{ rec.strongSell }}</td>
               </tr>
             </tbody>
-          </table>
+            </table>
         </div>
         <!-- Stock News -->
         <div v-if="stockNews.length" class="mt-8">
