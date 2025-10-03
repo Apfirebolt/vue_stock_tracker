@@ -41,10 +41,10 @@
                   watchlist.name
                 }}</span>
                 <span class="text-xs text-gray-400 ml-4">
-                  Created: {{ new Date(watchlist.created_at).toLocaleString() }}
+                  Created: {{ watchlist.created_at }}
                 </span>
                 <span class="text-xs text-gray-400 ml-2">
-                  Updated: {{ new Date(watchlist.updated_at).toLocaleString() }}
+                  Updated: {{ watchlist.updated_at }}
                 </span>
               </div>
               <div>

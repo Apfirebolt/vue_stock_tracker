@@ -17,7 +17,7 @@
         </label>
 
         <div class="mt-2 text-sm text-gray-600">
-          Created At: {{ new Date(watchlist.createdAt).toLocaleDateString() }}
+          Created At: {{ new Date(watchlist.created_at).toLocaleDateString() }}
         </div>
       </div>
 

@@ -18,13 +18,31 @@
             <p class="text-gray-600">
               {{ stock.ticker }} &mdash; {{ stock.exchange }}
             </p>
+            <p class="text-green-700 font-bold">
+              Current Price:
+              <span v-if="tickersAndCurrentPrice[stock.ticker] !== undefined">
+                ${{ tickersAndCurrentPrice[stock.ticker] }}
+              </span>
+              <span v-else>Loading...</span>
+            </p>
           </div>
           <button
             @click="removeStock(stock.ticker)"
             class="ml-auto flex items-center px-4 py-1 bg-danger text-white rounded hover:bg-red-700"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
             Remove
           </button>
@@ -36,8 +54,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { axiosInstance } from "../plugins/interceptor";
 import { useWatchlist } from "../stores/watchlist";
 
 const route = useRoute();
@@ -45,22 +64,39 @@ const watchlistStore = useWatchlist();
 const loading = ref(false);
 const error = ref(null);
 const watchlist = ref(null);
-const isAddStockFormOpen = ref(false);
+const tickersAndCurrentPrice = ref({});
 
 async function fetchWatchlist() {
   loading.value = true;
   error.value = null;
   try {
     const id = route.params.id;
-    await watchlistStore.getWatchlistsAction(1); // Ensure watchlists are loaded
+    await watchlistStore.getWatchlistsAction(1);
     watchlist.value = watchlistStore.getWatchlist.find((wl) => wl._id === id);
-    if (!watchlist.value) error.value = "Watchlist not found.";
+    if (!watchlist.value) {
+      error.value = "Watchlist not found.";
+    } else {
+      await fetchAllCurrentPrices();
+    }
   } catch (err) {
     error.value = "Failed to fetch watchlist";
     console.error(err);
   } finally {
     loading.value = false;
   }
+}
+
+async function fetchAllCurrentPrices() {
+  if (!watchlist.value || !watchlist.value.stocks) return;
+  const promises = watchlist.value.stocks.map(async (stock) => {
+    try {
+      const response = await axiosInstance.get(`/quote?symbol=${stock.ticker}`);
+      tickersAndCurrentPrice.value[stock.ticker] = response.data.c;
+    } catch (error) {
+      tickersAndCurrentPrice.value[stock.ticker] = null;
+    }
+  });
+  await Promise.all(promises);
 }
 
 async function removeStock(ticker) {
@@ -71,6 +107,7 @@ async function removeStock(ticker) {
     watchlist.value.stocks = watchlist.value.stocks.filter(
       (s) => s.ticker !== ticker
     );
+    delete tickersAndCurrentPrice.value[ticker];
   } catch (err) {
     alert("Failed to remove stock: " + (err.message || "Unknown error"));
   }
