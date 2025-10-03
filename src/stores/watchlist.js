@@ -55,7 +55,7 @@ export const useWatchlist = defineStore("watchlist", {
       }
     },
 
-    async getWatchlistAction(page = 1) {
+    async getWatchlistsAction(page = 1) {
       try {
         const auth = useAuth();
         const headers = {

@@ -130,6 +130,7 @@ const links = [
 
 const authLinks = [
   { name: "Dashboard", href: "/dashboard" },
+  { name: "Watch List", href: "/watchlist" },
   { name: "Profile", href: "/profile" },
   { name: "Symbol", href: "/symbol" },
   { name: "Country", href: "/country" },
