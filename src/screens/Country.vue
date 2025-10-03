@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-info">
-    <div class="bg-white shadow-lg rounded-lg py-6 mt-16">
+    <div class="bg-light shadow-lg rounded-lg py-6 mt-16">
       <h1 class="text-4xl font-bold text-white mb-4 bg-gradient-to-r from-primary to-secondary text-center py-2">Countries</h1>
       <div v-if="loading" class="text-gray-500">Loading...</div>
       <div v-else-if="error" class="text-red-500">{{ error }}</div>

@@ -46,7 +46,8 @@
         Comments: {{ stock.comments }}
       </div>
     </div>
-    <div v-if="showQuantity" class="mt-2 mx-auto">
+    <div class="bg-light text-white rounded-b text-center p-2">
+      <div v-if="showQuantity" class="mt-2 mx-auto">
       <input
         type="number"
         v-model.number="quantityInput"
@@ -82,6 +83,7 @@
       </svg>
       Sell Stock
     </button>
+    </div>
   </div>
 </template>
 

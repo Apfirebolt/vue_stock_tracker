@@ -1,6 +1,6 @@
 <template>
   <div class="bg-info">
-    <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
+    <div class="bg-light shadow-lg rounded-lg p-8 mt-16">
       <h1 class="text-4xl font-bold text-primary mb-4 text-center">Symbols</h1>
       <div
         v-if="defaultAccount"

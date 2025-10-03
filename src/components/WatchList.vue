@@ -16,18 +16,15 @@
           <span class="font-semibold text-lg">{{ watchlist.name }}</span>
         </label>
 
-        <div class="mt-2 text-base text-gray-600">
+        <div class="mt-2 text-sm text-gray-600">
             <p>
               Created At: {{ new Date(watchlist.created_at).toLocaleDateString() }}
-            </p>
-            <p>
-              Updated At: {{ new Date(watchlist.updated_at).toLocaleDateString() }}
             </p>
         </div>
       </div>
 
       <button
-        class="bg-secondary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+        class="bg-secondary hover:bg-blue-700 text-white font-bold mx-auto py-2 px-4 rounded mt-4"
         :disabled="!selectedWatchlists.length"
         @click="updateWatchListUtil"
       >
@@ -61,7 +58,7 @@ const updateWatchListUtil = () => {
   if (!selectedWatchlists.value.length) {
     errorMessage.value = "Please select at least one watchlist.";
     return;
-  }  
+  } 
   emits("update-watchlist-action", selectedWatchlists.value);
 };
 </script>

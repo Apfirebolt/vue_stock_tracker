@@ -12,7 +12,21 @@
   </div>
 </template>
 
+<!-- <template>
+  <div class="bg-secondary-300">
+    <header>
+      <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </header>
+  </div>
+</template> -->
+
 <script setup>
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/vue'
 import FooterComponent from './components/FooterComponent.vue';
 import HeaderComponent from './components/HeaderComponent.vue';
 </script>

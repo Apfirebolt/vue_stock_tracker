@@ -1,6 +1,6 @@
 <template>
   <div class="bg-info">
-    <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
+    <div class="bg-light shadow-lg rounded-lg p-8 mt-16">
       <h1 class="text-4xl font-bold text-primary mb-4 text-center">Profile</h1>
       <div class="flex flex-col md:flex-row gap-8">
         <!-- Sidebar -->
@@ -59,7 +59,7 @@
                     id="firstName"
                     v-model="form.firstName"
                     type="text"
-                    class="w-full border rounded px-3 py-2"
+                    class="w-full border rounded px-3 py-2 transition-all duration-300 ease-in-out hover:rounded-2xl"
                     required
                   />
                 </div>
@@ -87,7 +87,7 @@
                     id="lastName"
                     v-model="form.lastName"
                     type="text"
-                    class="w-full border rounded px-3 py-2"
+                    class="w-full border rounded px-3 py-2 transition-all duration-300 ease-in-out hover:rounded-2xl"
                     required
                   />
                 </div>
@@ -117,7 +117,7 @@
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="w-full border rounded px-3 py-2"
+                    class="w-full border rounded px-3 py-2 transition-all duration-300 ease-in-out hover:rounded-2xl"
                     required
                   />
                 </div>
@@ -163,7 +163,7 @@
                       id="oldPassword"
                       v-model="passwordForm.oldPassword"
                       type="password"
-                      class="w-full border rounded px-3 py-2 pl-10"
+                      class="w-full border rounded px-3 py-2 pl-10 transition-all duration-300 ease-in-out hover:rounded-2xl"
                       required
                     />
                     <PasswordIcon />
@@ -178,7 +178,7 @@
                       id="newPassword"
                       v-model="passwordForm.newPassword"
                       type="password"
-                      class="w-full border rounded px-3 py-2 pl-10"
+                      class="w-full border rounded px-3 py-2 pl-10 transition-all duration-300 ease-in-out hover:rounded-2xl"
                       required
                     />
                     <PasswordIcon />
@@ -195,7 +195,7 @@
                       id="confirmNewPassword"
                       v-model="passwordForm.confirmNewPassword"
                       type="password"
-                      class="w-full border rounded px-3 py-2 pl-10"
+                      class="w-full border rounded px-3 py-2 pl-10 transition-all duration-300 ease-in-out hover:rounded-2xl"
                       required
                     />
                     <PasswordIcon />

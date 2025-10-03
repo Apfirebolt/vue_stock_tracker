@@ -1,6 +1,6 @@
 <template>
   <div class="bg-info">
-    <div class="bg-white shadow-lg rounded-lg p-8 mt-16">
+    <div class="bg-light shadow-lg rounded-lg p-8 mt-16">
       <div class="flex justify-center items-center mb-6">
         <h1 class="text-4xl font-bold text-primary mr-2 text-center">
           Watch List
