@@ -509,10 +509,16 @@ const getWatchLists = async () => {
   }
 };
 
-const updateWatchListUtil = async (watchlistId, stockId) => {
+const updateWatchListUtil = async (watchlistId) => {
   try {
+    const addedStock = {
+      name: stockData.value.name,
+      ticker: stockData.value.ticker,
+      exchange: stockData.value.exchange,
+      logo: stockData.value.logo,
+    }
     await watchlistStore.updateWatchlistAction(watchlistId, {
-      stocks: [stockId],
+      stocks: [addedStock],
     });
     closeWatchListSelectForm();
   } catch (error) {
@@ -532,6 +538,10 @@ onMounted(() => {
   // fetch accounts if not already fetched
   if (accounts.value.length === 0) {
     accountStore.getAccountsAction();
+  }
+  // fetch watchlists if not already fetched
+  if (watchlists.value.length === 0) {
+    getWatchLists();
   }
 });
 </script>

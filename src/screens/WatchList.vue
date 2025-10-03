@@ -53,6 +53,26 @@
                 >
                 <div class="flex space-x-2 my-2">
                   <button
+                    @click="navigateToDetail(watchlist._id)"
+                    class="text-secondary hover:text-blue-500"
+                    title="View Details"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+                  <button
                     @click="openEditWatchlistForm(watchlist)"
                     class="text-primary hover:text-blue-700"
                     title="Edit"
@@ -161,7 +181,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useAuth } from "../stores/auth";
 import { useWatchlist } from "../stores/watchlist";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { axiosInstance } from "../plugins/interceptor";
 import WatchlistForm from "../components/WatchlistForm.vue";
 import Pagination from "../components/Pagination.vue";
@@ -186,6 +206,7 @@ const currentPage = ref(1);
 const totalPages = ref(1);
 const selectedWatchlist = ref(null);
 const authStore = useAuth();
+const router = useRouter();
 const watchlistStore = useWatchlist();
 const watchlists = computed(() => watchlistStore.getWatchlist);
 const isWatchlistFormOpen = ref(false);
@@ -198,6 +219,10 @@ const watchlistLastPage = computed(() => watchlistStore.getLastPage);
 watch(currentPage, (newPage) => {
   getWatchlists(newPage);
 });
+
+const navigateToDetail = (id) => {
+  router.push({ name: "WatchListDetail", params: { id } });
+};
 
 const updatePage = (page) => {
   currentPage.value = page;
