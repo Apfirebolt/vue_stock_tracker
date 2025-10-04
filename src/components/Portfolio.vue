@@ -43,7 +43,7 @@
   <Pagination
     :currentPage="currentPage"
     :total="total"
-    :perPage="5"
+    :perPage="10"
     class="mt-4"
     @update="updatePage"
   />
@@ -96,6 +96,7 @@ const computedCurrentValue = computed(() => currentValue.value);
 
 watch(currentPage, (newPage) => {
   props.getStocks(newPage);
+  calculateCurrentValues();
 });
 
 // a computed property which returns the current price of the passed symbol

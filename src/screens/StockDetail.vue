@@ -499,10 +499,10 @@ function refresh() {
   fetchRecommendations();
 }
 
-const getWatchLists = async () => {
+const getWatchLists = async (page = 1, limit = 10) => {
   try {
     if (watchlists.value.length === 0) {
-      await watchlistStore.getWatchlistsAction(1);
+      await watchlistStore.getWatchlistsAction(page, limit);
     }
   } catch (error) {
     console.error("Failed to fetch watchlists:", error);

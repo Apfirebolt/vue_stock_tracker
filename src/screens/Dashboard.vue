@@ -234,9 +234,9 @@ const getAccounts = async () => {
   }
 };
 
-const getStocks = async (page = 1) => {
+const getStocks = async (page = 1, limit = 10) => {
   try {
-    await stockStore.getStocksAction(page);
+    await stockStore.getStocksAction(page, limit);
   } catch (error) {
     console.error("Failed to fetch stocks:", error);
   }

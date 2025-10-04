@@ -55,13 +55,13 @@ export const useWatchlist = defineStore("watchlist", {
       }
     },
 
-    async getWatchlistsAction(page = 1) {
+    async getWatchlistsAction(page = 1, limit = 10) {
       try {
         const auth = useAuth();
         const headers = {
           Authorization: `Bearer ${auth.authData.token}`,
         };
-        const response = await httpClient.get("watchlist?page=" + page, {
+        const response = await httpClient.get("watchlist?page=" + page + "&limit=" + limit, {
           headers,
         });
         if (response.status === 200) {
