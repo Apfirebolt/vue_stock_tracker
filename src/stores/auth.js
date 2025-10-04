@@ -122,6 +122,32 @@ export const useAuth = defineStore("auth", {
       }
     },
 
+    async changePassword(passwordData) {
+      this.loading = true;
+      try {
+        const authData = Cookie.get("user");
+        const headers = {
+          Authorization: `Bearer ${JSON.parse(authData).token}`,
+        };
+        const response = await httpClient.put("auth/change-password", passwordData, { headers });
+        if (response.status === 200) {
+          this.success = true;
+          toast.success("Password changed successfully!", toastOptions);
+          return response.data;
+        }
+      } catch (error) {
+        let message = "An error occurred!";
+        if (error.response && error.response.data) {
+          message = error.response.data.message;
+        }
+        console.log(error);
+        toast.error(message, toastOptions);
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
     logout() {
 
       // Initialize the account store
