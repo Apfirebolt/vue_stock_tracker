@@ -509,7 +509,7 @@ const getWatchLists = async (page = 1, limit = 10) => {
   }
 };
 
-const updateWatchListUtil = async (watchlistId) => {
+const updateWatchListUtil = async (watchlist) => {
   try {
     const addedStock = {
       name: stockData.value.name,
@@ -517,9 +517,21 @@ const updateWatchListUtil = async (watchlistId) => {
       exchange: stockData.value.exchange,
       logo: stockData.value.logo,
     }
-    await watchlistStore.updateWatchlistAction(watchlistId, {
-      stocks: [addedStock],
-    });
+    console.log('Watch list ID:', watchlist);
+    if (!watchlist || watchlist.length === 0) {
+      alert("Please select at least one watchlist.");
+      return;
+    }
+    // if there are more than 1 watchlist call the update end point
+    if (watchlist.length > 1) {
+      await watchlistStore.updateMultipleWatchlistAction(watchlist, {
+        stocks: [addedStock],
+      });
+    } else {
+      await watchlistStore.updateWatchlistAction(watchlist[0], {
+        stocks: [addedStock],
+      });
+    }
     closeWatchListSelectForm();
   } catch (error) {
     console.error("Failed to update watchlist:", error);

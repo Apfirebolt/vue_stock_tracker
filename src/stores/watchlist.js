@@ -98,6 +98,29 @@ export const useWatchlist = defineStore("watchlist", {
       }
     },
 
+    async updateMultipleWatchlistAction(itemIds, itemData) {
+      try {
+        const auth = useAuth();
+        const headers = {
+          Authorization: `Bearer ${auth.authData.token}`,
+        };
+        const payload = {
+          watchlists: itemIds,
+          stock: itemData.stocks[0],
+        }
+        const response = await httpClient.put("watchlist/update", payload, {
+          headers,
+        });
+        if (response.status === 200) {
+          toast.success("Watchlist items updated!");
+        }
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+
     async deleteWatchlistAction(itemId) {
       try {
         const auth = useAuth();
